@@ -1,9 +1,10 @@
 ﻿using Catalog.Dtos;
 using System.ComponentModel.DataAnnotations;
+using Utility.DtoEntity;
 
 namespace Catalog.Models
 {
-    public class Product
+    public class Product: IEntity<ProductDto>
     {
         [Key]
         public int Id { get; set; }

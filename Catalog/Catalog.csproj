@@ -24,4 +24,8 @@
     <Folder Include="Resolvers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Utility\Utility.csproj" />
+  </ItemGroup>
+
 </Project>

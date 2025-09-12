@@ -1,8 +1,9 @@
 ﻿using Catalog.Models;
+using Utility.DtoEntity;
 
 namespace Catalog.Dtos
 {
-    public class ProductDto
+    public class ProductDto: IDto<Product>
     {
             public string Name { get; set; }
             public string Description { get; set; }
