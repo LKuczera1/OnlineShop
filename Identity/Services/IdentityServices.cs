@@ -27,9 +27,14 @@ namespace Identity.Services
         }
 
         //Get by Id
-        public async Task<AccountDto> GetAccountById(int id)
+        public async Task<ActionResult<AccountDto>> GetAccountById(int id)
         {
             var account = await _context.Set<Account>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
+
+            if (account == null)
+            {
+                return new NotFoundResult();
+            }
 
             return account.ToDto();
         }

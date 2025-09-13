@@ -1,4 +1,5 @@
 ﻿using Identity.Dtos;
+using Identity.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
@@ -22,6 +23,8 @@ namespace Identity.Models
         public string Address { get; set; } = string.Empty;
         [Required]
         public string City { get; set; } = string.Empty;
+        [Required]
+        public PriviledgeLevel PriviledgeLevel { get; set; } = PriviledgeLevel.NotAssigned;
 
         public AccountDto ToDto() => new AccountDto
         {
@@ -31,6 +34,7 @@ namespace Identity.Models
             PhoneNumber = PhoneNumber,
             Address = Address,
             City = City,
+            PriviledgeLevel = PriviledgeLevel
         };
     }
 }

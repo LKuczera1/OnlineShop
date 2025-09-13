@@ -1,4 +1,5 @@
-﻿using Identity.Models;
+﻿using Identity.Enums;
+using Identity.Models;
 using Utility.DtoEntity;
 
 namespace Identity.Dtos
@@ -13,6 +14,8 @@ namespace Identity.Dtos
         public string Address { get; set; }
         public string City { get; set; }
 
+        public PriviledgeLevel PriviledgeLevel { get; set; }
+
         public Account ToEntity(int id) => new Account
         {
             Id = id,
@@ -22,6 +25,7 @@ namespace Identity.Dtos
             PhoneNumber = PhoneNumber,
             Address = Address,
             City = City,
+            PriviledgeLevel = PriviledgeLevel
         };
     }
 }

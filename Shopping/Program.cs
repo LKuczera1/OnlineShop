@@ -1,6 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using Shopping;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddDbContext<ShoppingDbContext>(
+    options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Shopping;Trusted_Connection=True;"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -1,0 +1,70 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Shopping;
+using Shopping.Dtos;
+using Shopping.Models;
+using Shopping.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Shopping.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class OrdersController : ControllerBase
+    {
+        private readonly OrderService _context;
+
+        public OrdersController(OrderService context)
+        {
+            _context = context;
+        }
+
+        // GET: api/Orders
+        [HttpGet]
+        public async Task<IEnumerable<OrderDto>> GetOrders()
+        {
+            return await _context.GetOrders();
+        }
+
+        // GET: api/Orders/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<OrderDto>> GetOrder(int id)
+        {
+            return await _context.GetOrderById(id);
+        }
+
+        // PUT: api/Orders/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutOrder(int id, OrderDto order)
+        {
+            return await _context.PutOrder(id, order);
+        }
+
+        // POST: api/Orders
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<OrderDto>> PostOrder(OrderDto order)
+        {
+            return await _context.PostOrder(order);
+        }
+
+        // DELETE: api/Orders/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            return await _context.DeleteOrder(id);
+        }
+
+        /*
+        private bool OrderExists(int id)
+        {
+            return _context.Orders.Any(e => e.Id == id);
+        }
+        */
+    }
+}

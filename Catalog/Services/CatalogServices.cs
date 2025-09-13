@@ -24,9 +24,14 @@ namespace Catalog.Services
         }
 
         //Get by Id
-        public async Task<ProductDto> GetProductsById(int id)
+        public async Task<ActionResult<ProductDto>> GetProductsById(int id)
         {
             var product = await _context.Set<Product>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
+
+            if(product == null)
+            {
+                return new NotFoundResult();
+            }
 
             return product.ToDto();
         }

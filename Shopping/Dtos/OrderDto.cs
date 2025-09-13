@@ -1,34 +1,23 @@
 ﻿using Shopping.Enums;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using Utility.DtoEntity;
-using Shopping.Dtos;
+using Shopping.Models;
 
-namespace Shopping.Models
+namespace Shopping.Dtos
 {
-    public class Order :IEntity<OrderDto>
+    public class OrderDto :IDto<Order>
     {
-        [Key]
-        public int Id { get; set; }
-        [Required]
         public int OrderId { get; set; }
-        [Required]
         public int ClientId { get; set; }
-        [Required]
-        public OrderStatus Status { get; set; } = OrderStatus.Paid;
-        [Required]
+        public OrderStatus Status { get; set; }
         public double TotalPrice { get; set; }
-        [Required]
-        public DateTime OrderTime { get; set; } = DateTime.Now;
-        [AllowNull]
+        public DateTime OrderTime { get; set; }
         public DateTime? PackedTime { get; set; }
-        [AllowNull]
         public DateTime? SendTime { get; set; }
-        [AllowNull]
         public DateTime? DeliveredTime { get; set; }
 
-        public OrderDto ToDto() => new OrderDto
+        public Order ToEntity(int id) => new Order
         {
+            Id = id,
             OrderId = OrderId,
             ClientId = ClientId,
             Status = Status,
