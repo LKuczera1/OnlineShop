@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shopping;
 using Shopping.Dtos;
+using Shopping.Enums;
 using Shopping.Models;
 using Shopping.Services;
+using Shopping.Services.Facade;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +19,12 @@ namespace Shopping.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly OrderService _context;
+        private readonly ShoppingFacade _shoppingFacade;
 
-        public OrdersController(OrderService context)
+        public OrdersController(OrderService context, ShoppingFacade shoppingFacade)
         {
             _context = context;
+            _shoppingFacade = shoppingFacade;
         }
 
         // GET: api/Orders
@@ -58,6 +62,26 @@ namespace Shopping.Controllers
         public async Task<IActionResult> DeleteOrder(int id)
         {
             return await _context.DeleteOrder(id);
+        }
+
+        //Facade
+
+        [HttpPost("{itemId}:move-to-cart")]
+        public async Task<ActionResult> MoveItemFromWishlistToCart(int itemId)
+        {
+            return await _shoppingFacade.MoveItemFromWishlistToCart(itemId);
+        }
+
+        [HttpPost("place-order")]
+        public async Task<ActionResult> PlaceOrder()
+        {
+            return await _shoppingFacade.PlaceOrder();
+        }
+
+        [HttpGet("{orderId}/status")]
+        public async Task<ActionResult<OrderStatus>> GetOrderStatus(int orderId)
+        {
+            return await _shoppingFacade.GetOrderStatus(orderId);
         }
 
         /*
