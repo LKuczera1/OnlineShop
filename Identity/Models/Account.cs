@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Identity.Dtos;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using Utility.DtoEntity;
 
 namespace Identity.Models
 {
-    public class Identity
+    public class Account :IEntity<AccountDto>
     {
         [Key]
         public int Id { get; set; }
@@ -20,5 +22,15 @@ namespace Identity.Models
         public string Address { get; set; } = string.Empty;
         [Required]
         public string City { get; set; } = string.Empty;
+
+        public AccountDto ToDto() => new AccountDto
+        {
+            UserName = UserName,
+            Password = Password,
+            Email = Email,
+            PhoneNumber = PhoneNumber,
+            Address = Address,
+            City = City,
+        };
     }
 }

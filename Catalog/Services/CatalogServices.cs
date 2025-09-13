@@ -47,7 +47,7 @@ namespace Catalog.Services
         }
 
         //Post
-        public async Task<ActionResult<Product>> PostProduct(ProductDto dto)
+        public async Task<ActionResult<ProductDto>> PostProduct(ProductDto dto)
         {
             var entity = dto.ToEntity(0);
 
@@ -57,7 +57,7 @@ namespace Catalog.Services
             return new CreatedAtRouteResult(nameof(PostProduct), new { id = entity.Id }, entity);
         }
 
-        //Post
+        //Delete
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -71,7 +71,5 @@ namespace Catalog.Services
 
             return new NoContentResult();
         }
-
-
     }
 }
