@@ -24,5 +24,14 @@ namespace Catalog.Models
             Price = Price,
             Stock = Stock,
         };
+
+        public void FromDto(int id, ProductDto dto)
+        {
+            Id = id;
+            Name = dto.Name;
+            Description = dto.Description;
+            Price = dto.Price;
+            Stock = dto.Stock;
+        }
     }
 }

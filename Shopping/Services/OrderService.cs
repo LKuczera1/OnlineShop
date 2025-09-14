@@ -45,9 +45,9 @@ namespace Shopping.Services
             if (entity is null)
                 return new NotFoundResult();
 
-            entity = dto.ToEntity(id);
+            entity.FromDto(id, dto);
 
-            _context.Entry(entity).State = EntityState.Modified;
+            //_context.Entry(entity).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
             return new NoContentResult();
@@ -61,7 +61,7 @@ namespace Shopping.Services
             _context.Set<OrderedItem>().Add(entity);
             await _context.SaveChangesAsync();
 
-            return new CreatedAtRouteResult(nameof(PostOrderItem), new { id = entity.Id }, entity);
+            return new CreatedAtRouteResult(nameof(GetOrderItemById), new { id = entity.Id }, entity);
         }
 
         //Delete
@@ -110,9 +110,9 @@ namespace Shopping.Services
             if (entity is null)
                 return new NotFoundResult();
 
-            entity = dto.ToEntity(id);
+            entity.FromDto(id, dto);
 
-            _context.Entry(entity).State = EntityState.Modified;
+            //_context.Entry(entity).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
             return new NoContentResult();
@@ -126,7 +126,7 @@ namespace Shopping.Services
             _context.Set<Order>().Add(entity);
             await _context.SaveChangesAsync();
 
-            return new CreatedAtRouteResult(nameof(PostOrder), new { id = entity.Id }, entity);
+            return new CreatedAtRouteResult(nameof(GetOrderById), new { id = entity.Id }, entity);
         }
 
         //Delete

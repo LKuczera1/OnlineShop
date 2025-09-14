@@ -1,4 +1,5 @@
 using Catalog;
+using Identity.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<IdentityDbContext>(
     options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Identity;Trusted_Connection=True;"));
+
+builder.Services.AddScoped<IdentityServices>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

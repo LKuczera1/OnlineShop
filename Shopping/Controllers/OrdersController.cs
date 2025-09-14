@@ -36,14 +36,14 @@ namespace Shopping.Controllers
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderDto>> GetOrder(int id)
+        public async Task<ActionResult<OrderDto>> GetOrderById(int id)
         {
             return await _context.GetOrderById(id);
         }
 
         // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "GetOrderById")]
         public async Task<IActionResult> PutOrder(int id, OrderDto order)
         {
             return await _context.PutOrder(id, order);

@@ -32,14 +32,14 @@ namespace Shopping.Controllers
 
         // GET: api/WishlistItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<WishlistItemDto>> GetWishlistItem(int id)
+        public async Task<ActionResult<WishlistItemDto>> GetWishlistItemById(int id)
         {
             return await _context.GetWishlistItemById(id);
         }
 
         // PUT: api/WishlistItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "GetWishlistItemById")]
         public async Task<IActionResult> PutWishlistItem(int id, WishlistItemDto wishlistItem)
         {
             return await _context.PutWishlistItem(id, wishlistItem);

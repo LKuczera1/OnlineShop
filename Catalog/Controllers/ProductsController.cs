@@ -31,10 +31,10 @@ namespace Catalog.Controllers
         }
 
         // GET: api/Products/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetProductById")]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
-            return await _context.GetProductsById(id);
+            return await _context.GetProductById(id);
         }
 
         // PUT: api/Products/5

@@ -24,5 +24,14 @@ namespace Shopping.Models
             Quantity = Quantity,
             Price = Price
         };
+
+        public void FromDto(int id, ShoppingCartItemDto dto)
+        {
+            Id = id;
+            ClientId = dto.ClientId;
+            ProductId = dto.ProductId;
+            Quantity = dto.Quantity;
+            Price = dto.Price;
+        }
     }
 }

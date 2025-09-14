@@ -39,7 +39,7 @@ namespace Shopping.Controllers
 
         // PUT: api/OrderedItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "GetOrderedItem")]
         public async Task<IActionResult> PutOrderedItem(int id, OrderedItemDto orderedItem)
         {
             return await _context.PutOrderItem(id, orderedItem);

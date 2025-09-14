@@ -9,6 +9,7 @@ using Catalog;
 using Identity.Models;
 using Identity.Services;
 using Identity.Dtos;
+using Identity.Enums;
 
 namespace Identity.Controllers
 {
@@ -31,7 +32,7 @@ namespace Identity.Controllers
         }
 
         // GET: api/Accounts/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetAccountById")]
         public async Task<ActionResult<AccountDto>> GetAccount(int id)
         {
             return await _context.GetAccountById(id);
@@ -44,6 +45,14 @@ namespace Identity.Controllers
         {
             return await _context.PutAccount(id, account);
         }
+
+        // PUT: api/Accounts/5
+        [HttpPut("setPriviledgeLevel/{id}/{priviledgeLevel}")]
+        public async Task<IActionResult> SetPriviledgeLevel(int id, PriviledgeLevel priviledgeLevel)
+        {
+            return await _context.SetPriviledgeLevel(id, priviledgeLevel);
+        }
+
 
         // POST: api/Accounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

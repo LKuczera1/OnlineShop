@@ -24,7 +24,7 @@ namespace Catalog.Services
         }
 
         //Get by Id
-        public async Task<ActionResult<ProductDto>> GetProductsById(int id)
+        public async Task<ActionResult<ProductDto>> GetProductById(int id)
         {
             var product = await _context.Set<Product>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
 
@@ -43,9 +43,9 @@ namespace Catalog.Services
             if (entity is null)
                 return new NotFoundResult();
 
-            entity = dto.ToEntity(id);
+            entity.FromDto(id, dto);
 
-            _context.Entry(entity).State = EntityState.Modified;
+            //_context.Entry(entity).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
             return new NoContentResult();
@@ -59,7 +59,7 @@ namespace Catalog.Services
             _context.Set<Product>().Add(entity);
             await _context.SaveChangesAsync();
 
-            return new CreatedAtRouteResult(nameof(PostProduct), new { id = entity.Id }, entity);
+            return new CreatedAtRouteResult(nameof(GetProductById), new { id = entity.Id }, entity);
         }
 
         //Delete

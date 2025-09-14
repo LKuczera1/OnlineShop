@@ -21,5 +21,13 @@ namespace Shopping.Models
             Quantity = Quantity,
             ClientId = ClientId
         };
+
+        public void FromDto(int id, WishlistItemDto dto)
+        {
+            Id = id;
+            ClientId = dto.ClientId;
+            ProductId = dto.ProductId;
+            Quantity = dto.Quantity;
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace Shopping.Controllers
 
         // PUT: api/ShoppingCartItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "GetShoppingCartItemById")]
         public async Task<IActionResult> PutShoppingCartItem(int id, ShoppingCartItemDto shoppingCartItem)
         {
             return await _context.PutShoppingCartItem(id, shoppingCartItem);

@@ -1,5 +1,6 @@
 ﻿using Catalog;
 using Identity.Dtos;
+using Identity.Enums;
 using Identity.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -46,9 +47,10 @@ namespace Identity.Services
             if (entity is null)
                 return new NotFoundResult();
 
-            entity = dto.ToEntity(id);
+            entity.FromDto(id, dto);
 
-            _context.Entry(entity).State = EntityState.Modified;
+            //_context.Entry(entity).State = EntityState.Modified;
+            //Zakomentowane aby API nie zwracalo bledu 500
 
             await _context.SaveChangesAsync();
             return new NoContentResult();
@@ -62,7 +64,7 @@ namespace Identity.Services
             _context.Set<Account>().Add(entity);
             await _context.SaveChangesAsync();
 
-            return new CreatedAtRouteResult(nameof(PostAccount), new { id = entity.Id }, entity);
+            return new CreatedAtRouteResult(nameof(GetAccountById), new { id = entity.Id }, entity);
         }
 
         //Delete
@@ -77,6 +79,18 @@ namespace Identity.Services
             _context.UserAccounts.Remove(account);
             await _context.SaveChangesAsync();
 
+            return new NoContentResult();
+        }
+
+        public async Task<IActionResult> SetPriviledgeLevel(int id, PriviledgeLevel priviledgeLevel)
+        {
+            var entity = await _context.Set<Account>().FindAsync([id]);
+            if (entity is null)
+                return new NotFoundResult();
+
+            entity.PriviledgeLevel = priviledgeLevel;
+
+            await _context.SaveChangesAsync();
             return new NoContentResult();
         }
     }

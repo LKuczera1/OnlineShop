@@ -36,5 +36,17 @@ namespace Identity.Models
             City = City,
             PriviledgeLevel = PriviledgeLevel
         };
+
+        public void FromDto(int id, AccountDto dto)
+        {
+            Id = id;
+            UserName = dto.UserName;
+            Password = dto.Password;
+            Email = dto.Email;
+            PhoneNumber = dto.PhoneNumber;
+            Address = dto.Address;
+            City = dto.City;
+            PriviledgeLevel = PriviledgeLevel;
+        }
     }
 }

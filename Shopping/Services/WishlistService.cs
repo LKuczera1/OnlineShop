@@ -44,9 +44,9 @@ namespace Shopping.Services
             if (entity is null)
                 return new NotFoundResult();
 
-            entity = dto.ToEntity(id);
+            entity.FromDto(id, dto);
 
-            _context.Entry(entity).State = EntityState.Modified;
+            //_context.Entry(entity).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
             return new NoContentResult();
@@ -60,7 +60,7 @@ namespace Shopping.Services
             _context.Set<WishlistItem>().Add(entity);
             await _context.SaveChangesAsync();
 
-            return new CreatedAtRouteResult(nameof(PostWishlistItem), new { id = entity.Id }, entity);
+            return new CreatedAtRouteResult(nameof(GetWishlistItemById), new { id = entity.Id }, dto);
         }
 
         //Delete

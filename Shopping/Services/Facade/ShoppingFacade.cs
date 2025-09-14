@@ -27,6 +27,8 @@ namespace Shopping.Services.Facade
 
         public async Task<ActionResult> MoveItemFromWishlistToCart(int itemId)
         {
+
+            //Nie by product id tylko by customerid
             var wishlistItem = await _wishlistService.GetWishlistItemById(itemId);
 
             if (wishlistItem is NotFoundResult)

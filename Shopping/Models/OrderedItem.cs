@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Shopping.Dtos;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Intrinsics.Wasm;
 using Utility.DtoEntity;
-using Shopping.Dtos;
 
 namespace Shopping.Models
 {
@@ -25,5 +26,14 @@ namespace Shopping.Models
             Quantity = Quantity,
             Price = Price
         };
+
+        public void FromDto(int id, OrderedItemDto dto)
+        {
+            Id = id;
+            OrderId = dto.OrderId;
+            ProductId = dto.ProductId;
+            Quantity = dto.Quantity;
+            Price = dto.Price;
+        }
     }
 }

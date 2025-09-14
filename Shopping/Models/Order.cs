@@ -38,5 +38,18 @@ namespace Shopping.Models
             SendTime = SendTime,
             DeliveredTime = DeliveredTime,
         };
+
+        public void FromDto(int id, OrderDto dto)
+        {
+            Id = id;
+            OrderId = dto.OrderId;
+            ClientId = dto.ClientId;
+            Status = dto.Status;
+            TotalPrice = dto.TotalPrice;
+            OrderTime = dto.OrderTime;
+            PackedTime = dto.PackedTime;
+            SendTime = dto.SendTime;
+            DeliveredTime = dto.DeliveredTime;
+        }
     }
 }

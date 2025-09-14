@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 using Shopping;
 using Shopping.Services;
 using Shopping.Services.Facade;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,14 @@ builder.Services.AddScoped<WishlistService>();
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ShoppingFacade>();
+
+//Ignorowanie controllerów z innych rest API
+builder.Services.AddControllers()
+    .ConfigureApplicationPartManager(apm =>
+    {
+        apm.ApplicationParts.Clear();
+        apm.ApplicationParts.Add(new AssemblyPart(Assembly.GetExecutingAssembly()));
+    });
 
 var app = builder.Build();
 
