@@ -34,14 +34,7 @@ namespace Catalog.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
-            var product = await _context.GetProductsById(id);
-
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return product;
+            return await _context.GetProductsById(id);
         }
 
         // PUT: api/Products/5

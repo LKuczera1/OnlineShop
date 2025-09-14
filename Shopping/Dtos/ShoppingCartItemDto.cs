@@ -18,5 +18,14 @@ namespace Shopping.Dtos
             Quantity = Quantity,
             Price = Price
         };
+
+        public OrderedItemDto ToOrderedItemDto(int orderId) => new OrderedItemDto()
+        {
+
+            OrderId = orderId,
+            ProductId = ProductId,
+            Quantity = Quantity,
+            Price = Price
+        };
     }
 }

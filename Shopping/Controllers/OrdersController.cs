@@ -75,11 +75,12 @@ namespace Shopping.Controllers
         [HttpPost("place-order")]
         public async Task<ActionResult> PlaceOrder()
         {
-            return await _shoppingFacade.PlaceOrder();
+            //-KLIENT ID TRZEBA PODAC
+            return await _shoppingFacade.PlaceOrder(10);
         }
 
         [HttpGet("{orderId}/status")]
-        public async Task<ActionResult<OrderStatus>> GetOrderStatus(int orderId)
+        public async Task<ActionResult<OrderStatusDto>> GetOrderStatus(int orderId)
         {
             return await _shoppingFacade.GetOrderStatus(orderId);
         }

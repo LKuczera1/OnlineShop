@@ -37,6 +37,20 @@ namespace Shopping.Services
             return cartItem.ToDto();
         }
 
+
+        //Get by ClientId
+        public async Task<ActionResult<List<ShoppingCartItemDto>>> GetShoppingCartItemByClientId(int ClientId)
+        {
+            var order = await _context.Set<ShoppingCartItem>().Where(c => c.ClientId.Equals(ClientId)).ToListAsync();
+
+            if (order == null)
+            {
+                return new NotFoundResult();
+            }
+
+            return order.Select(o => o.ToDto()).ToList();
+        }
+
         //Put
         public async Task<IActionResult> PutShoppingCartItem(int id, ShoppingCartItemDto dto)
         {
@@ -74,6 +88,24 @@ namespace Shopping.Services
 
             _context.ShoppingCartItems.Remove(cartItem);
             await _context.SaveChangesAsync();
+
+            return new NoContentResult();
+        }
+
+        //Delete by clientId
+        public async Task<IActionResult> DeleteShoppingCartItemByClientId(int ClientId)
+        {
+            var cartItems = await _context.Set<ShoppingCartItem>().Where(c => c.ClientId.Equals(ClientId)).ToListAsync();
+            if (cartItems == null)
+            {
+                return new NotFoundResult();
+            }
+
+            foreach (var item in cartItems)
+            {
+                _context.ShoppingCartItems.Remove(item);
+                await _context.SaveChangesAsync();
+            }
 
             return new NoContentResult();
         }

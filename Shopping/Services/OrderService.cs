@@ -91,9 +91,14 @@ namespace Shopping.Services
         }
 
         //Get by Id
-        public async Task<OrderDto> GetOrderById(int id)
+        public async Task<ActionResult<OrderDto>> GetOrderById(int id)
         {
             var order = await _context.Set<Order>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
+
+            if (order == null)
+            {
+                return new NotFoundResult();
+            }
 
             return order.ToDto();
         }

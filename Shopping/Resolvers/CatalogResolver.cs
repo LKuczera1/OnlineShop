@@ -7,6 +7,15 @@
         {
             _httpClient = httpClient;
         }
+        public CatalogResolver()
+        {
+
+        }
+
+        public async Task<Catalog.Dtos.ProductDto> ResolveForProduct(int productId)
+        {
+            return null;
+        }
         /*
         public async Task<AnimalDto?> ResolveAnimal(int animalId)
         {

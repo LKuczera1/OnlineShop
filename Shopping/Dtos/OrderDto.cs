@@ -27,5 +27,13 @@ namespace Shopping.Dtos
             SendTime = SendTime,
             DeliveredTime = DeliveredTime,
         };
+
+        public OrderStatusDto ToOrderStatus() => new OrderStatusDto
+        {
+            Status = Status,
+            OrderTime = OrderTime,
+            PackedTime = PackedTime,
+            SendTime = SendTime,
+        };
     }
 }
