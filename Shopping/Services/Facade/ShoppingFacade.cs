@@ -16,13 +16,15 @@ namespace Shopping.Services.Facade
 
         private readonly CatalogResolver _catalogResolver;
 
-        public ShoppingFacade(CartService cartService, OrderService orderService, WishlistService wishlistService)
+        public ShoppingFacade(CartService cartService, OrderService orderService, WishlistService wishlistService, CatalogResolver catalogResolver)
         {
             _cartService = cartService;
             _orderService = orderService;
             _wishlistService = wishlistService;
 
-            _catalogResolver = new CatalogResolver();
+            _catalogResolver = catalogResolver;
+
+            _catalogResolver.ResolveForProduct(1);
         }
 
         public async Task<ActionResult> MoveItemFromWishlistToCart(int itemId)

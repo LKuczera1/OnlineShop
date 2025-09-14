@@ -8,10 +8,7 @@ namespace Shopping.Resolvers
         public CatalogResolver(HttpClient httpClient)
         {
             _httpClient = httpClient;
-        }
-        public CatalogResolver()
-        {
-
+            Console.WriteLine("Szalom");
         }
 
         public async Task<Catalog.Dtos.ProductDto> ResolveForProduct(int productId)
