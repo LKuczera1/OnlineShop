@@ -1,6 +1,6 @@
-﻿using Identity.Enums;
-using Identity.Models;
+﻿using Identity.Models;
 using Utility.DtoEntity;
+using Utility.Enums;
 
 namespace Identity.Dtos
 {

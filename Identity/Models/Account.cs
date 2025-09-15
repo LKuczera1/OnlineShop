@@ -1,9 +1,8 @@
 ﻿using Identity.Dtos;
-using Identity.Enums;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using Utility.DtoEntity;
+using Utility.Enums;
 
 namespace Identity.Models
 {

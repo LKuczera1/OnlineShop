@@ -15,9 +15,20 @@ namespace Shopping.Services
         }
 
         //Get
-        public async Task<IEnumerable<WishlistItemDto>> GetWishlistItems()
+        public async Task<IEnumerable<WishlistItemDto>> GetWishlistItems(int? userId = null)
         {
-            var wishlistItemsList = await _context.Set<WishlistItem>().ToListAsync();
+            List<WishlistItem> wishlistItemsList;
+
+            if (userId == null)
+            {
+                wishlistItemsList = await _context.Set<WishlistItem>().ToListAsync();
+            }
+            else
+            {
+                wishlistItemsList = await _context.Set<WishlistItem>()
+                                                  .Where(w => w.ClientId == userId)
+                                                  .ToListAsync();
+            }
 
             var wishlist = wishlistItemsList.Select(p => p.ToDto());
 

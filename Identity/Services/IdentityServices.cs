@@ -1,9 +1,10 @@
 ﻿using Catalog;
 using Identity.Dtos;
-using Identity.Enums;
 using Identity.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Utility.Enums;
 
 namespace Identity.Services
 {
@@ -11,10 +12,17 @@ namespace Identity.Services
     {
 
         private readonly IdentityDbContext _context;
+        private readonly JWTService _jwtService;
+        private readonly IConfiguration _config;
 
-        public IdentityServices(IdentityDbContext context)
+        //Haszowanie hasła
+        private readonly PasswordHasher<AccountDto> _hasher = new();
+
+        public IdentityServices(IdentityDbContext context, JWTService jwtService, IConfiguration config)
         {
             _context = context;
+            _jwtService = jwtService;
+            _config = config;
         }
 
         //Get
@@ -92,6 +100,70 @@ namespace Identity.Services
 
             await _context.SaveChangesAsync();
             return new NoContentResult();
+        }
+
+        public async Task<IActionResult> Login(LoginRequestDto loginRequest)
+        {
+            var entity = await _context.UserAccounts.FirstOrDefaultAsync(user => user.UserName == loginRequest.UserName);
+
+            if (entity == null) return new NotFoundObjectResult("Account with such username was not found");
+
+            if(VerifyPassword(loginRequest, entity.ToDto()) == PasswordVerificationResult.Success)
+            {
+                var JWTtoken = _jwtService.GenerateToken(entity.Id, entity.UserName, entity.PriviledgeLevel.ToString());
+
+                return new OkObjectResult(new AuthResponseDto
+                {
+                    Token = JWTtoken,
+                    ExpiresAt = DateTime.UtcNow.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]!)),
+                    UserId = entity.Id,
+                    UserName = entity.UserName,
+                    PriviledgeLevel = entity.PriviledgeLevel
+                });
+            }
+            else
+            {
+                return new BadRequestObjectResult("Wrong password");
+            }
+        }
+
+        public async Task<IActionResult> Register(AccountDto account)
+        {
+            if (string.IsNullOrWhiteSpace(account.UserName) ||
+                string.IsNullOrWhiteSpace(account.Password) ||
+                string.IsNullOrWhiteSpace(account.Email) ||
+                string.IsNullOrWhiteSpace(account.Address) ||
+                string.IsNullOrWhiteSpace(account.City))
+            {
+                return new BadRequestObjectResult("The registration form was not completed correctly");
+            }
+
+            var entity = await _context.UserAccounts.FirstOrDefaultAsync(user => 
+                user.UserName.ToLower() == account.UserName.ToLower());
+
+            if(entity != null)
+            {
+                return new BadRequestObjectResult("Account with this username already exists.");
+            }
+
+            account.PriviledgeLevel = PriviledgeLevel.Customer;
+
+            account.Password = HashPassword(account);
+
+            _context.Set<Account>().Add(account.ToEntity(0));
+            await _context.SaveChangesAsync();
+
+            return new OkObjectResult("Account was succesfully created");
+        }
+
+        private string HashPassword(AccountDto account)
+        {
+            return _hasher.HashPassword(account, account.Password);
+        }
+
+        private PasswordVerificationResult VerifyPassword(LoginRequestDto request, AccountDto user)
+        {
+            return _hasher.VerifyHashedPassword(user, user.Password, request.Password);
         }
     }
 }

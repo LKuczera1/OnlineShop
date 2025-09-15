@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Catalog;
+﻿using Catalog;
+using Catalog.Dtos;
 using Catalog.Models;
 using Catalog.Services;
-using Catalog.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Utility.Enums;
 
 namespace Catalog.Controllers
 {
@@ -40,6 +36,7 @@ namespace Catalog.Controllers
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<IActionResult> PutProduct(int id, ProductDto dto)
         {
             return await _context.PutProduct(id, dto);
@@ -47,6 +44,7 @@ namespace Catalog.Controllers
 
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         [HttpPost]
         public async Task<ActionResult<ProductDto>> PostProduct(ProductDto dto)
         {
@@ -54,6 +52,7 @@ namespace Catalog.Controllers
         }
 
         // DELETE: api/Products/5
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {

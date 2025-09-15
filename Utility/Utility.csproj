@@ -6,12 +6,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="AppSettings\appsettings.json"
-			  CopyToOutputDirectory="PreserveNewest"
-			  CopyToPublishDirectory="PreserveNewest" />
+		<None Include="AppSettings\appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
 	</ItemGroup>
 </Project>

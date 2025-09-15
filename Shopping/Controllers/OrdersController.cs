@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shopping;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utility.Enums;
 
 namespace Shopping.Controllers
 {
@@ -29,6 +31,7 @@ namespace Shopping.Controllers
 
         // GET: api/Orders
         [HttpGet]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<IEnumerable<OrderDto>> GetOrders()
         {
             return await _context.GetOrders();
@@ -36,6 +39,7 @@ namespace Shopping.Controllers
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<ActionResult<OrderDto>> GetOrderById(int id)
         {
             return await _context.GetOrderById(id);
@@ -44,6 +48,7 @@ namespace Shopping.Controllers
         // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}", Name = "GetOrderById")]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<IActionResult> PutOrder(int id, OrderDto order)
         {
             return await _context.PutOrder(id, order);
@@ -52,6 +57,7 @@ namespace Shopping.Controllers
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<ActionResult<OrderDto>> PostOrder(OrderDto order)
         {
             return await _context.PostOrder(order);
@@ -59,6 +65,7 @@ namespace Shopping.Controllers
 
         // DELETE: api/Orders/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             return await _context.DeleteOrder(id);
@@ -67,12 +74,14 @@ namespace Shopping.Controllers
         //Facade
 
         [HttpPost("{itemId}:move-to-cart")]
+        [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<ActionResult> MoveItemFromWishlistToCart(int itemId)
         {
             return await _shoppingFacade.MoveItemFromWishlistToCart(itemId);
         }
 
         [HttpPost("place-order")]
+        [Authorize(Roles = RolesStr.Customer)]
         public async Task<ActionResult> PlaceOrder()
         {
             //-KLIENT ID TRZEBA PODAC
@@ -80,6 +89,7 @@ namespace Shopping.Controllers
         }
 
         [HttpGet("{orderId}/status")]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
         public async Task<ActionResult<OrderStatusDto>> GetOrderStatus(int orderId)
         {
             return await _shoppingFacade.GetOrderStatus(orderId);

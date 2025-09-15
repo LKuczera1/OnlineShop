@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +6,11 @@ using Shopping;
 using Shopping.Dtos;
 using Shopping.Models;
 using Shopping.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Utility.Enums;
 
 namespace Shopping.Controllers
 {
@@ -25,6 +27,7 @@ namespace Shopping.Controllers
 
         // GET: api/ShoppingCartItems
         [HttpGet]
+        [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<IEnumerable<ShoppingCartItemDto>> GetShoppingCartItems()
         {
             return await _context.GetShoppingCartItems();
@@ -32,6 +35,7 @@ namespace Shopping.Controllers
 
         // GET: api/ShoppingCartItems/5
         [HttpGet("{id}")]
+        [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<ActionResult<ShoppingCartItemDto>> GetShoppingCartItemById(int id)
         {
             return await _context.GetShoppingCartItemById(id);
@@ -40,6 +44,7 @@ namespace Shopping.Controllers
         // PUT: api/ShoppingCartItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}", Name = "GetShoppingCartItemById")]
+        [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<IActionResult> PutShoppingCartItem(int id, ShoppingCartItemDto shoppingCartItem)
         {
             return await _context.PutShoppingCartItem(id, shoppingCartItem);
@@ -48,6 +53,7 @@ namespace Shopping.Controllers
         // POST: api/ShoppingCartItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<ActionResult<ShoppingCartItemDto>> PostShoppingCartItem(ShoppingCartItemDto shoppingCartItem)
         {
             return await _context.PostShoppingCartItem(shoppingCartItem);
@@ -55,6 +61,7 @@ namespace Shopping.Controllers
 
         // DELETE: api/ShoppingCartItems/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<IActionResult> DeleteShoppingCartItem(int id)
         {
             return await _context.DeleteShoppingCartItem(id);
