@@ -25,15 +25,38 @@ namespace Shopping.Controllers
         {
             _context = context;
         }
-
-        private int GetUserId()
+        //
+        //
+        //
+        // Trzeba dokonczyc resolver i endpointy tak aby uzytkownik dostawal tylko swoje rzeczy....
+        // zabijcie mnie....
+        // Jak rozdzielić endpointy między administratorów i customerów żeby nie robić pierdyliarda endpointów?
+        //
+        //
+        //
+        // Potrzebuje jednej metody w kontrolerach (Może nawet dziedziczonej z klasy)
+        // ktora bedzie sprawdzac role uzytkownika i konwertowac ja na PriviledgeLevel
+        //
+        // Nastepnie Będzie to przekazywac do metody Services, gdzie za pomoca switch() uzytkownik bedzie
+        // odpowiednio obslugiwany, lub w przypadku braku dostepu/dedykowanej obslugi zwracany "AccesDenied"
+        //
+        //
+        private int? GetUserId()
         {
-            return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var value = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (int.TryParse(value, out var id)) return id;
+
+            return null;
+        }
+
+        private bool IsUserInRole(string role)
+        {
+            return User.IsInRole(role);
         }
 
         // GET: api/WishlistItems
         [HttpGet]
-        [Authorize(Roles = RolesStr.Admin_Customer)]
+        [Authorize(Roles = RolesStr.Customer)]
         public async Task<IEnumerable<WishlistItemDto>> GetWishlist()
         {
             //Fetches user wishlist  
@@ -53,17 +76,36 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<ActionResult<WishlistItemDto>> GetWishlistItemById(int id)
         {
-            return await _context.GetWishlistItemById(id);
+            
+
+            if(User.IsInRole(RolesStr.Admin))
+            {
+                return await _context.GetWishlistItemById(id,0, false);
+            }
+            else
+            {
+                return await _context.GetWishlistItemById(id, GetUserId(),false);
+            }
         }
 
         // PUT: api/WishlistItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}", Name = "GetWishlistItemById")]
-        [Authorize(Roles = RolesStr.Admin_Customer)]
+        [Authorize(Roles = RolesStr.Admin)]
         public async Task<IActionResult> PutWishlistItem(int id, WishlistItemDto wishlistItem)
         {
             return await _context.PutWishlistItem(id, wishlistItem);
         }
+
+        //// PUT: api/WishlistItems/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("PutWishlistItem{id}", Name = "GetWishlistItemById")]
+        //[Authorize(Roles = RolesStr.Admin_Customer)]
+        //public async Task<IActionResult> PutWishlistItemCustomer(int id, WishlistItemDto wishlistItem)
+        //{
+        //    if (GetUserId() != wishlistItem.ClientId) return BadRequest();
+        //    return await _context.PutWishlistItem(id, wishlistItem);
+        //}
 
         // POST: api/WishlistItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

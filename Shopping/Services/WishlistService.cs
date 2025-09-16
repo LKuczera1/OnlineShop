@@ -36,9 +36,24 @@ namespace Shopping.Services
         }
 
         //Get by Id
-        public async Task<ActionResult<WishlistItemDto>> GetWishlistItemById(int id)
+        public async Task<ActionResult<WishlistItemDto>> GetWishlistItemById(int id, int? clientId, bool adminAccess)
         {
-            var wishlistItem = await _context.Set<WishlistItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
+            WishlistItem? wishlistItem;
+
+            if (clientId is null && adminAccess)
+            {
+                wishlistItem = await _context.Set<WishlistItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
+            }
+            else
+            {
+                wishlistItem = await _context.Set<WishlistItem>().Where(c =>
+                c.Id.Equals(id) && c.ClientId.Equals(clientId)).SingleOrDefaultAsync();
+            }
+
+            if (clientId is null)
+            {
+                throw new UnauthorizedAccessException("Missing user id");
+            }
 
             if (wishlistItem == null)
             {
