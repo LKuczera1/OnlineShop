@@ -54,6 +54,17 @@ namespace Shopping.Controllers
             return User.IsInRole(role);
         }
 
+        private string GetUserRole()
+        {
+            //First because user claims only single role
+            return User.Claims.Where(r => r.Type == ClaimTypes.Role).Select(r => r.Value).First();
+        }
+
+        private PriviledgeLevel GetPrivilegeLevel()
+        {
+            return RolesStr.RoleToEnum(GetUserRole());
+        }
+
         // GET: api/WishlistItems
         [HttpGet]
         [Authorize(Roles = RolesStr.Customer)]
@@ -76,36 +87,17 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<ActionResult<WishlistItemDto>> GetWishlistItemById(int id)
         {
-            
-
-            if(User.IsInRole(RolesStr.Admin))
-            {
-                return await _context.GetWishlistItemById(id,0, false);
-            }
-            else
-            {
-                return await _context.GetWishlistItemById(id, GetUserId(),false);
-            }
+            return await _context.GetWishlistItemById(id, GetUserId(),  GetPrivilegeLevel());
         }
 
         // PUT: api/WishlistItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}", Name = "GetWishlistItemById")]
-        [Authorize(Roles = RolesStr.Admin)]
+        [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<IActionResult> PutWishlistItem(int id, WishlistItemDto wishlistItem)
         {
-            return await _context.PutWishlistItem(id, wishlistItem);
+            return await _context.PutWishlistItem(id, wishlistItem, GetUserId(), GetPrivilegeLevel());
         }
-
-        //// PUT: api/WishlistItems/5
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("PutWishlistItem{id}", Name = "GetWishlistItemById")]
-        //[Authorize(Roles = RolesStr.Admin_Customer)]
-        //public async Task<IActionResult> PutWishlistItemCustomer(int id, WishlistItemDto wishlistItem)
-        //{
-        //    if (GetUserId() != wishlistItem.ClientId) return BadRequest();
-        //    return await _context.PutWishlistItem(id, wishlistItem);
-        //}
 
         // POST: api/WishlistItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

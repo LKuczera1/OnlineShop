@@ -35,5 +35,17 @@
 
             return str;
         }
+
+        public static PriviledgeLevel RoleToEnum(string role)
+        {
+            switch(role)
+            {
+                case RolesStr.Admin: return PriviledgeLevel.Admin;
+                case RolesStr.Customer: return PriviledgeLevel.Customer;
+                case RolesStr.SalesDepartmentWorker: return PriviledgeLevel.SalesDepartmentWorker;
+                case RolesStr.NotAssigned: return PriviledgeLevel.NotAssigned;
+                default: return PriviledgeLevel.NotAssigned;
+            }
+        }
     }
 }

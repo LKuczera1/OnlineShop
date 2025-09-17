@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shopping.Dtos;
 using Shopping.Models;
+using Utility.Enums;
 
 namespace Shopping.Services
 {
@@ -36,23 +37,22 @@ namespace Shopping.Services
         }
 
         //Get by Id
-        public async Task<ActionResult<WishlistItemDto>> GetWishlistItemById(int id, int? clientId, bool adminAccess)
+        public async Task<ActionResult<WishlistItemDto>> GetWishlistItemById(int id, int? clientId, PriviledgeLevel priviledgeLevel)
         {
             WishlistItem? wishlistItem;
 
-            if (clientId is null && adminAccess)
+            switch(priviledgeLevel)
             {
-                wishlistItem = await _context.Set<WishlistItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
-            }
-            else
-            {
-                wishlistItem = await _context.Set<WishlistItem>().Where(c =>
-                c.Id.Equals(id) && c.ClientId.Equals(clientId)).SingleOrDefaultAsync();
-            }
-
-            if (clientId is null)
-            {
-                throw new UnauthorizedAccessException("Missing user id");
+                case PriviledgeLevel.Admin:
+                    wishlistItem = await _context.Set<WishlistItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
+                    break;
+                case PriviledgeLevel.Customer:
+                    if (clientId is null) return new BadRequestResult();
+                    wishlistItem = await _context.Set<WishlistItem>().Where(c =>
+                    c.Id.Equals(id) && c.ClientId.Equals(clientId)).SingleOrDefaultAsync();
+                    break;
+                default:
+                    return new UnauthorizedResult();
             }
 
             if (wishlistItem == null)
@@ -64,13 +64,38 @@ namespace Shopping.Services
         }
 
         //Put
-        public async Task<IActionResult> PutWishlistItem(int id, WishlistItemDto dto)
+        public async Task<IActionResult> PutWishlistItem(int id, WishlistItemDto dto, int? clientId, PriviledgeLevel priviledgeLevel)
         {
-            var entity = await _context.Set<WishlistItem>().FindAsync([id]);
+            WishlistItem? entity;
+
+            switch (priviledgeLevel)
+            {
+                case PriviledgeLevel.Admin:
+
+                    entity = await _context.Set<WishlistItem>().FindAsync(id);
+
+                    break;
+                case PriviledgeLevel.Customer:
+
+
+                    //Too tired...
+                    //1. Czy jak wczesniej zadeklaruje entity, to bedzie ono dalej sledzone przez kontekst?
+                    //2. Jak znalezc po PK i ClientId? Not sure if this is neccesary...
+
+
+                    entity = await _context.Set<WishlistItem>().FindAsync(id, clientId);
+
+                    break;
+                default:
+                    return new UnauthorizedResult();
+            }
+
+
             if (entity is null)
                 return new NotFoundResult();
 
             entity.FromDto(id, dto);
+
 
             //_context.Entry(entity).State = EntityState.Modified;
 
