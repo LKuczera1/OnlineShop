@@ -31,7 +31,7 @@ namespace Shopping.Services.Facade
         {
 
             //Nie by product id tylko by customerid
-            var wishlistItem = await _wishlistService.GetWishlistItemById(itemId);
+            var wishlistItem = await _wishlistService.GetWishlistItemById(itemId, null);
 
             if (wishlistItem is NotFoundResult)
             {
@@ -53,7 +53,7 @@ namespace Shopping.Services.Facade
                 Price = product.Price,
             };
 
-            await _wishlistService.DeleteWishlistItem(itemId);
+            await _wishlistService.DeleteWishlistItem(itemId, null);
             await _cartService.PostShoppingCartItem(item);
 
             return new OkResult();

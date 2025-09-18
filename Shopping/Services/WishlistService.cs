@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Shopping.Dtos;
 using Shopping.Models;
+using Utility.Common;
+using Utility.DtoEntity;
 using Utility.Enums;
 
 namespace Shopping.Services
@@ -37,19 +39,19 @@ namespace Shopping.Services
         }
 
         //Get by Id
-        public async Task<ActionResult<WishlistItemDto>> GetWishlistItemById(int id, int? clientId, PriviledgeLevel priviledgeLevel)
+        public async Task<ActionResult<WishlistItemDto>> GetWishlistItemById(int id, UserData userData)
         {
             WishlistItem? wishlistItem;
 
-            switch(priviledgeLevel)
+            switch(userData.priviledgeLevel)
             {
                 case PriviledgeLevel.Admin:
                     wishlistItem = await _context.Set<WishlistItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
                     break;
                 case PriviledgeLevel.Customer:
-                    if (clientId is null) return new BadRequestResult();
+                    if (userData.clientId is null) return new BadRequestResult();
                     wishlistItem = await _context.Set<WishlistItem>().Where(c =>
-                    c.Id.Equals(id) && c.ClientId.Equals(clientId)).SingleOrDefaultAsync();
+                    c.Id.Equals(id) && c.ClientId.Equals(userData.clientId)).SingleOrDefaultAsync();
                     break;
                 default:
                     return new UnauthorizedResult();
@@ -64,38 +66,35 @@ namespace Shopping.Services
         }
 
         //Put
-        public async Task<IActionResult> PutWishlistItem(int id, WishlistItemDto dto, int? clientId, PriviledgeLevel priviledgeLevel)
+        public async Task<IActionResult> PutWishlistItem(int id, WishlistItemDto dto, UserData userData)
         {
-            WishlistItem? entity;
+            var entity = await _context.Set<WishlistItem>().FindAsync(id);
 
-            switch (priviledgeLevel)
+            if (entity is null)
+                return new NotFoundResult();
+
+            switch (userData.priviledgeLevel)
             {
                 case PriviledgeLevel.Admin:
 
-                    entity = await _context.Set<WishlistItem>().FindAsync(id);
+                    entity.FromDto(id, dto);
 
                     break;
                 case PriviledgeLevel.Customer:
 
+                    if (userData.clientId is null)
+                        return new UnauthorizedResult();
 
-                    //Too tired...
-                    //1. Czy jak wczesniej zadeklaruje entity, to bedzie ono dalej sledzone przez kontekst?
-                    //2. Jak znalezc po PK i ClientId? Not sure if this is neccesary...
+                    if (entity.ClientId != userData.clientId)
+                        return new ForbidResult();
 
-
-                    entity = await _context.Set<WishlistItem>().FindAsync(id, clientId);
+                    entity.FromDto(id, dto);
+                    entity.ClientId = (int)userData.clientId;
 
                     break;
                 default:
                     return new UnauthorizedResult();
             }
-
-
-            if (entity is null)
-                return new NotFoundResult();
-
-            entity.FromDto(id, dto);
-
 
             //_context.Entry(entity).State = EntityState.Modified;
 
@@ -104,9 +103,28 @@ namespace Shopping.Services
         }
 
         //Post
-        public async Task<ActionResult<WishlistItemDto>> PostWishlistItem(WishlistItemDto dto)
+        public async Task<ActionResult<WishlistItemDto>> PostWishlistItem(WishlistItemDto dto, UserData userData)
         {
             var entity = dto.ToEntity(0);
+
+            switch (userData.priviledgeLevel)
+            {
+                case PriviledgeLevel.Admin:
+
+                    //Nothing to do here
+
+                    break;
+                case PriviledgeLevel.Customer:
+
+                    if (userData.clientId is null)
+                        return new UnauthorizedResult();
+
+                    entity.ClientId = (int)userData.clientId;
+
+                    break;
+                default:
+                    return new UnauthorizedResult();
+            }
 
             _context.Set<WishlistItem>().Add(entity);
             await _context.SaveChangesAsync();
@@ -115,15 +133,35 @@ namespace Shopping.Services
         }
 
         //Delete
-        public async Task<IActionResult> DeleteWishlistItem(int id)
+        public async Task<IActionResult> DeleteWishlistItem(int id, UserData userData)
         {
-            var account = await _context.Wishlist.FindAsync(id);
-            if (account == null)
+            var entity = await _context.Wishlist.FindAsync(id);
+            if (entity == null)
             {
                 return new NotFoundResult();
             }
 
-            _context.Wishlist.Remove(account);
+            switch (userData.priviledgeLevel)
+            {
+                case PriviledgeLevel.Admin:
+
+                    //Nothing to do here
+
+                    break;
+                case PriviledgeLevel.Customer:
+
+                    if (userData.clientId is null)
+                        return new UnauthorizedResult();
+
+                    if (entity.ClientId != userData.clientId)
+                        return new ForbidResult();
+
+                    break;
+                default:
+                    return new UnauthorizedResult();
+            }
+
+            _context.Wishlist.Remove(entity);
             await _context.SaveChangesAsync();
 
             return new NoContentResult();

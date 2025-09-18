@@ -11,13 +11,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Utility.Common;
 using Utility.Enums;
 
 namespace Shopping.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WishlistItemsController : ControllerBase
+    public class WishlistItemsController : CustomControllerBase
     {
         private readonly WishlistService _context;
 
@@ -28,42 +29,10 @@ namespace Shopping.Controllers
         //
         //
         //
-        // Trzeba dokonczyc resolver i endpointy tak aby uzytkownik dostawal tylko swoje rzeczy....
-        // zabijcie mnie....
-        // Jak rozdzielić endpointy między administratorów i customerów żeby nie robić pierdyliarda endpointów?
+        // Trzeba dokonczyc resolver i pozostałe kontrollery
+        // Naprawić w services metode Getwishlistitem, i zrobic porządek w kontrolerze z operacją get
         //
         //
-        //
-        // Potrzebuje jednej metody w kontrolerach (Może nawet dziedziczonej z klasy)
-        // ktora bedzie sprawdzac role uzytkownika i konwertowac ja na PriviledgeLevel
-        //
-        // Nastepnie Będzie to przekazywac do metody Services, gdzie za pomoca switch() uzytkownik bedzie
-        // odpowiednio obslugiwany, lub w przypadku braku dostepu/dedykowanej obslugi zwracany "AccesDenied"
-        //
-        //
-        private int? GetUserId()
-        {
-            var value = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (int.TryParse(value, out var id)) return id;
-
-            return null;
-        }
-
-        private bool IsUserInRole(string role)
-        {
-            return User.IsInRole(role);
-        }
-
-        private string GetUserRole()
-        {
-            //First because user claims only single role
-            return User.Claims.Where(r => r.Type == ClaimTypes.Role).Select(r => r.Value).First();
-        }
-
-        private PriviledgeLevel GetPrivilegeLevel()
-        {
-            return RolesStr.RoleToEnum(GetUserRole());
-        }
 
         // GET: api/WishlistItems
         [HttpGet]
@@ -87,7 +56,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<ActionResult<WishlistItemDto>> GetWishlistItemById(int id)
         {
-            return await _context.GetWishlistItemById(id, GetUserId(),  GetPrivilegeLevel());
+            return await _context.GetWishlistItemById(id, GetUserData());
         }
 
         // PUT: api/WishlistItems/5
@@ -96,7 +65,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<IActionResult> PutWishlistItem(int id, WishlistItemDto wishlistItem)
         {
-            return await _context.PutWishlistItem(id, wishlistItem, GetUserId(), GetPrivilegeLevel());
+            return await _context.PutWishlistItem(id, wishlistItem, GetUserData());
         }
 
         // POST: api/WishlistItems
@@ -105,7 +74,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<ActionResult<WishlistItemDto>> PostWishlistItem(WishlistItemDto wishlistItem)
         {
-            return await _context.PostWishlistItem(wishlistItem);
+            return await _context.PostWishlistItem(wishlistItem, GetUserData());
         }
 
         // DELETE: api/WishlistItems/5
@@ -113,7 +82,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<IActionResult> DeleteWishlistItem(int id)
         {
-            return await _context.DeleteWishlistItem(id);
+            return await _context.DeleteWishlistItem(id, GetUserData());
         }
 
         /*
