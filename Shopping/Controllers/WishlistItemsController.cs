@@ -26,30 +26,23 @@ namespace Shopping.Controllers
         {
             _context = context;
         }
-        //
-        //
-        //
-        // Trzeba dokonczyc resolver i pozostałe kontrollery
-        // Naprawić w services metode Getwishlistitem, i zrobic porządek w kontrolerze z operacją get
-        //
-        //
 
         // GET: api/WishlistItems
         [HttpGet]
-        [Authorize(Roles = RolesStr.Customer)]
+        [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<IEnumerable<WishlistItemDto>> GetWishlist()
         {
             //Fetches user wishlist  
-            return await _context.GetWishlistItems(GetUserId());
+            return await _context.GetWishlistItems(GetUserData());
         }
 
         // GET: api/WishlistItems/all
-        [HttpGet("all")]
-        [Authorize(Roles = RolesStr.Admin)]
-        public async Task<IEnumerable<WishlistItemDto>> GetAllWishlist()
-        {
-            return await _context.GetWishlistItems();
-        }
+        //[HttpGet("all")]
+        //[Authorize(Roles = RolesStr.Admin)]
+        //public async Task<IEnumerable<WishlistItemDto>> GetAllWishlist()
+        //{
+        //    return await _context.GetWishlistItems();
+        //}
 
         // GET: api/WishlistItems/5
         [HttpGet("{id}")]

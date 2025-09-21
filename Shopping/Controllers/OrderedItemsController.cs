@@ -10,13 +10,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utility.Common;
 using Utility.Enums;
 
 namespace Shopping.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrderedItemsController : ControllerBase
+    public class OrderedItemsController : CustomControllerBase
     {
         private readonly OrderService _context;
 
@@ -26,19 +27,19 @@ namespace Shopping.Controllers
         }
 
         // GET: api/OrderedItems
-        [HttpGet]
-        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
-        public async Task<IEnumerable<OrderedItemDto>> GetOrderedItems()
+        [HttpGet("{orderId?}")]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
+        public async Task<ActionResult<IEnumerable<OrderedItemDto>>> GetOrderedItems(int? orderId)
         {
-            return await _context.GetOrderItems();
+            return await _context.GetOrderItems(GetUserData(), orderId);
         }
 
         // GET: api/OrderedItems/5
-        [HttpGet("{id}")]
-        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
-        public async Task<ActionResult<OrderedItemDto>> GetOrderedItem(int id)
+        [HttpGet("{id}/{orderId?}")]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
+        public async Task<ActionResult<OrderedItemDto>> GetOrderedItem(int id, int? orderId)
         {
-            return await _context.GetOrderItemById(id);
+            return await _context.GetOrderItemById(id, GetUserData(), orderId);
         }
 
         // PUT: api/OrderedItems/5
@@ -47,13 +48,13 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<IActionResult> PutOrderedItem(int id, OrderedItemDto orderedItem)
         {
-            return await _context.PutOrderItem(id, orderedItem);
+            return await _context.PutOrderItem(id, orderedItem, GetUserData());
         }
 
         // POST: api/OrderedItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
+        [Authorize(Roles = RolesStr.Admin)]
         public async Task<ActionResult<OrderedItemDto>> PostOrderedItem(OrderedItemDto orderedItem)
         {
             return await _context.PostOrderItem(orderedItem);
@@ -61,7 +62,7 @@ namespace Shopping.Controllers
 
         // DELETE: api/OrderedItems/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
+        [Authorize(Roles = RolesStr.Admin)]
         public async Task<IActionResult> DeleteOrderedItem(int id)
         {
             return await _context.DeleteOrderItem(id);

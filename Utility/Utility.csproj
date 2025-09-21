@@ -20,3 +20,4 @@
 		<None Include="AppSettings\appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
 	</ItemGroup>
 </Project>
+

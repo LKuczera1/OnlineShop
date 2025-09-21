@@ -38,13 +38,13 @@ namespace Utility.Common
             return User.Claims.Where(r => r.Type == ClaimTypes.Role).Select(r => r.Value).First();
         }
 
-        protected PriviledgeLevel GetPrivilegeLevel()
+        protected PrivilegeLevel GetPrivilegeLevel()
         {
             var role = GetUserRole();
 
             if(role!=null) return RolesStr.RoleToEnum(role);
 
-            return PriviledgeLevel.NotAssigned;
+            return PrivilegeLevel.NotAssigned;
         }
 
         protected UserData GetUserData()
@@ -58,3 +58,4 @@ namespace Utility.Common
         //}
     }
 }
+

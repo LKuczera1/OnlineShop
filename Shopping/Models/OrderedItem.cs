@@ -10,7 +10,7 @@ namespace Shopping.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required] // <-- Zamienic na foreign key???
+        [Required]                         //<-- Zaimplementować foreign key???
         public int OrderId { get; set; }
         [Required]
         public int ProductId { get; set; }

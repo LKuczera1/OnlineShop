@@ -11,3 +11,4 @@ namespace Shopping.Dtos
         public DateTime? DeliveredTime { get; set; }
     }
 }
+

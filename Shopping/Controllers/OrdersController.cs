@@ -12,13 +12,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utility.Common;
 using Utility.Enums;
 
 namespace Shopping.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class OrdersController : CustomControllerBase
     {
         private readonly OrderService _context;
         private readonly ShoppingFacade _shoppingFacade;
@@ -34,7 +35,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<IEnumerable<OrderDto>> GetOrders()
         {
-            return await _context.GetOrders();
+            return await _context.GetOrders(GetUserData());
         }
 
         // GET: api/Orders/5
@@ -42,7 +43,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<ActionResult<OrderDto>> GetOrderById(int id)
         {
-            return await _context.GetOrderById(id);
+            return await _context.GetOrderById(id, GetUserData());
         }
 
         // PUT: api/Orders/5
@@ -51,7 +52,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<IActionResult> PutOrder(int id, OrderDto order)
         {
-            return await _context.PutOrder(id, order);
+            return await _context.PutOrder(id, order, GetUserData());
         }
 
         // POST: api/Orders
@@ -60,7 +61,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<ActionResult<OrderDto>> PostOrder(OrderDto order)
         {
-            return await _context.PostOrder(order);
+            return await _context.PostOrder(order, GetUserData());
         }
 
         // DELETE: api/Orders/5
@@ -68,7 +69,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<IActionResult> DeleteOrder(int id)
         {
-            return await _context.DeleteOrder(id);
+            return await _context.DeleteOrder(id, GetUserData());
         }
 
         //Facade
@@ -77,22 +78,21 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<ActionResult> MoveItemFromWishlistToCart(int itemId)
         {
-            return await _shoppingFacade.MoveItemFromWishlistToCart(itemId);
+            return await _shoppingFacade.MoveItemFromWishlistToCart(itemId, GetUserData());
         }
 
         [HttpPost("place-order")]
         [Authorize(Roles = RolesStr.Customer)]
         public async Task<ActionResult> PlaceOrder()
         {
-            //-KLIENT ID TRZEBA PODAC
-            return await _shoppingFacade.PlaceOrder(10);
+            return await _shoppingFacade.PlaceOrder(GetUserData());
         }
 
         [HttpGet("{orderId}/status")]
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
         public async Task<ActionResult<OrderStatusDto>> GetOrderStatus(int orderId)
         {
-            return await _shoppingFacade.GetOrderStatus(orderId);
+            return await _shoppingFacade.GetOrderStatus(orderId, GetUserData());
         }
 
         /*

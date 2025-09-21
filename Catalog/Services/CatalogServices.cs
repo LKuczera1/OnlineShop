@@ -2,6 +2,7 @@
 using Catalog.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Utility.Common;
 
 namespace Catalog.Services
 {
@@ -37,7 +38,7 @@ namespace Catalog.Services
         }
 
         //Put
-        public async Task<IActionResult> PutProduct(int id, ProductDto dto)
+        public async Task<IActionResult> PutProduct(int id, ProductDto dto, UserData userData)
         {
             var entity = await _context.Set<Product>().FindAsync([id]);
             if (entity is null)
@@ -52,7 +53,7 @@ namespace Catalog.Services
         }
 
         //Post
-        public async Task<ActionResult<ProductDto>> PostProduct(ProductDto dto)
+        public async Task<ActionResult<ProductDto>> PostProduct(ProductDto dto, UserData userData)
         {
             var entity = dto.ToEntity(0);
 
@@ -63,7 +64,7 @@ namespace Catalog.Services
         }
 
         //Delete
-        public async Task<IActionResult> DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct(int id, UserData userData)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)

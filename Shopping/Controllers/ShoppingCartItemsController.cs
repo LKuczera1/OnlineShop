@@ -10,13 +10,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utility.Common;
 using Utility.Enums;
 
 namespace Shopping.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShoppingCartItemsController : ControllerBase
+    public class ShoppingCartItemsController : CustomControllerBase
     {
         private readonly CartService _context;
 
@@ -28,9 +29,9 @@ namespace Shopping.Controllers
         // GET: api/ShoppingCartItems
         [HttpGet]
         [Authorize(Roles = RolesStr.Admin_Customer)]
-        public async Task<IEnumerable<ShoppingCartItemDto>> GetShoppingCartItems()
+        public async Task<ActionResult<IEnumerable<ShoppingCartItemDto>>> GetShoppingCartItems()
         {
-            return await _context.GetShoppingCartItems();
+            return await _context.GetShoppingCartItems(GetUserData());
         }
 
         // GET: api/ShoppingCartItems/5
@@ -38,7 +39,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<ActionResult<ShoppingCartItemDto>> GetShoppingCartItemById(int id)
         {
-            return await _context.GetShoppingCartItemById(id);
+            return await _context.GetShoppingCartItemById(id, GetUserData());
         }
 
         // PUT: api/ShoppingCartItems/5
@@ -47,7 +48,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<IActionResult> PutShoppingCartItem(int id, ShoppingCartItemDto shoppingCartItem)
         {
-            return await _context.PutShoppingCartItem(id, shoppingCartItem);
+            return await _context.PutShoppingCartItem(id, shoppingCartItem, GetUserData());
         }
 
         // POST: api/ShoppingCartItems
@@ -56,7 +57,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<ActionResult<ShoppingCartItemDto>> PostShoppingCartItem(ShoppingCartItemDto shoppingCartItem)
         {
-            return await _context.PostShoppingCartItem(shoppingCartItem);
+            return await _context.PostShoppingCartItem(shoppingCartItem, GetUserData());
         }
 
         // DELETE: api/ShoppingCartItems/5
@@ -64,7 +65,7 @@ namespace Shopping.Controllers
         [Authorize(Roles = RolesStr.Admin_Customer)]
         public async Task<IActionResult> DeleteShoppingCartItem(int id)
         {
-            return await _context.DeleteShoppingCartItem(id);
+            return await _context.DeleteShoppingCartItem(id, GetUserData());
         }
 
         /*

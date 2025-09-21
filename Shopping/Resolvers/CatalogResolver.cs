@@ -11,30 +11,23 @@ namespace Shopping.Resolvers
         {
             _httpClient = httpClient;
 
+            //Temporarily hardcoded
             baseurl = "https://localhost:7001/api/";
         }
 
         public async Task<Catalog.Dtos.ProductDto> ResolveForProduct(int productId)
         {
-            var prod = new ProductDto();
-            prod.Price = 10;
-
-            return prod;
-        }
-        /*
-        public async Task<AnimalDto?> ResolveAnimal(int animalId)
-        {
-            var url = $"http://localhost:5241/api/Animals/{animalId}";
+            var url = baseurl + $"{productId}";
 
             try
             {
-                var animal = await _httpClient.GetFromJsonAsync<AnimalDto>(url);
-                return animal;
+                var product = await _httpClient.GetFromJsonAsync<ProductDto>(url);
+                return product;
             }
             catch
             {
                 return null;
             }
-        }*/
+        }
     }
 }

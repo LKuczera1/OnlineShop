@@ -13,3 +13,4 @@ namespace Utility.DtoEntity
         public void FromDto(int id, TDto dto);
     }
 }
+

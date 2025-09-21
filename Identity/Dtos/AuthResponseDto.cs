@@ -10,6 +10,6 @@ namespace Identity.Dtos
         public DateTime ExpiresAt { get; set; }
         public int UserId { get; set; }
         public string UserName { get; set; }
-        public PriviledgeLevel PriviledgeLevel { get; set; }
+        public PrivilegeLevel PriviledgeLevel { get; set; }
     }
 }

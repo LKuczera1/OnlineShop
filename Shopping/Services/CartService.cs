@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Shopping.Dtos;
 using Shopping.Models;
+using Utility.Common;
+using Utility.DtoEntity;
+using Utility.Enums;
 
 namespace Shopping.Services
 {
@@ -15,33 +18,67 @@ namespace Shopping.Services
         }
 
         //Get
-        public async Task<IEnumerable<ShoppingCartItemDto>> GetShoppingCartItems()
+        public async Task<ActionResult<IEnumerable<ShoppingCartItemDto>>> GetShoppingCartItems(UserData userData)
         {
-            var cartItemsList = await _context.Set<ShoppingCartItem>().ToListAsync();
+            List<ShoppingCartItem> cartItemsList;
+
+            switch (userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    cartItemsList = await _context.Set<ShoppingCartItem>().ToListAsync();
+                    break;
+                case PrivilegeLevel.Customer:
+                    cartItemsList = await _context.Set<ShoppingCartItem>()
+                        .Where(c => c.ClientId.Equals(userData.clientId)).ToListAsync();
+                    break;
+                default: return new ForbidResult();
+            }
 
             var itemsList = cartItemsList.Select(p => p.ToDto());
 
-            return itemsList;
+            return new OkObjectResult(itemsList);
         }
 
         //Get by Id
-        public async Task<ActionResult<ShoppingCartItemDto>> GetShoppingCartItemById(int id)
+        public async Task<ActionResult<ShoppingCartItemDto>> GetShoppingCartItemById(int id, UserData userData)
         {
-            var cartItem = await _context.Set<ShoppingCartItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
+            ShoppingCartItem? cartItem;
+
+            switch (userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    cartItem = await _context.Set<ShoppingCartItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
+                    break;
+                case PrivilegeLevel.Customer:
+                    cartItem = await _context.Set<ShoppingCartItem>()
+                        .Where(c => c.Id.Equals(id) && c.ClientId.Equals(userData.clientId)).SingleOrDefaultAsync();
+                    break;
+                default: return new ForbidResult();
+            }
 
             if (cartItem == null)
             {
                 return new NotFoundResult();
             }
 
-            return cartItem.ToDto();
+            return new OkObjectResult(cartItem.ToDto());
         }
 
 
         //Get by ClientId
-        public async Task<ActionResult<List<ShoppingCartItemDto>>> GetShoppingCartItemByClientId(int ClientId)
+        public async Task<ActionResult<List<ShoppingCartItemDto>>> GetShoppingCartItemByClientId(int ClientId, UserData userData)
         {
-            var order = await _context.Set<ShoppingCartItem>().Where(c => c.ClientId.Equals(ClientId)).ToListAsync();
+            List<ShoppingCartItem>? order = await _context.Set<ShoppingCartItem>().Where(c => c.ClientId.Equals(ClientId)).ToListAsync();
+
+            switch (userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    //Nothing to do here
+                case PrivilegeLevel.Customer:
+                    if (ClientId != userData.clientId) return new UnauthorizedResult();
+                    break;
+                default: return new ForbidResult();
+            }
 
             if (order == null)
             {
@@ -52,13 +89,24 @@ namespace Shopping.Services
         }
 
         //Put
-        public async Task<IActionResult> PutShoppingCartItem(int id, ShoppingCartItemDto dto)
+        public async Task<IActionResult> PutShoppingCartItem(int id, ShoppingCartItemDto dto, UserData userData)
         {
-            var entity = await _context.Set<ShoppingCartItem>().FindAsync([id]);
+            var entity = await _context.Set<ShoppingCartItem>().FindAsync(id);
             if (entity is null)
                 return new NotFoundResult();
 
-            entity.FromDto(id, dto);
+            switch (userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    entity.FromDto(id, dto);
+                    break;
+                case PrivilegeLevel.Customer:
+
+                    if (entity.ClientId != userData.clientId) return new UnauthorizedResult();
+                    entity.FromDto(id, dto);
+                    break;
+                default: return new ForbidResult();
+            }
 
             //_context.Entry(entity).State = EntityState.Modified;
 
@@ -67,9 +115,23 @@ namespace Shopping.Services
         }
 
         //Post
-        public async Task<ActionResult<ShoppingCartItemDto>> PostShoppingCartItem(ShoppingCartItemDto dto)
+        public async Task<ActionResult<ShoppingCartItemDto>> PostShoppingCartItem(ShoppingCartItemDto dto, UserData userData)
         {
-            var entity = dto.ToEntity(0);
+            ShoppingCartItem entity;
+
+            switch (userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    entity = dto.ToEntity(0);
+                    break;
+                case PrivilegeLevel.Customer:
+                    if (userData.clientId is null) return new ForbidResult();
+
+                    entity = dto.ToEntity(0);
+                    dto.ClientId = (int)userData.clientId;
+                    break;
+                default: return new ForbidResult();
+            }
 
             _context.Set<ShoppingCartItem>().Add(entity);
             await _context.SaveChangesAsync();
@@ -78,12 +140,23 @@ namespace Shopping.Services
         }
 
         //Delete
-        public async Task<IActionResult> DeleteShoppingCartItem(int id)
+        public async Task<IActionResult> DeleteShoppingCartItem(int id, UserData userData)
         {
             var cartItem = await _context.ShoppingCartItems.FindAsync(id);
             if (cartItem == null)
             {
                 return new NotFoundResult();
+            }
+
+            switch (userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    //Nothing to do here
+                    break;
+                case PrivilegeLevel.Customer:
+                    if (cartItem.ClientId != userData.clientId) return new BadRequestResult();
+                    break;
+                default: return new ForbidResult();
             }
 
             _context.ShoppingCartItems.Remove(cartItem);
@@ -92,8 +165,8 @@ namespace Shopping.Services
             return new NoContentResult();
         }
 
-        //Delete by clientId
-        public async Task<IActionResult> DeleteShoppingCartItemByClientId(int ClientId)
+        //Delete by clientId | For this moment used only by Facade.Resolver 
+        public async Task<IActionResult> DeleteShoppingCartItemsByClientId(int ClientId, UserData userData)
         {
             var cartItems = await _context.Set<ShoppingCartItem>().Where(c => c.ClientId.Equals(ClientId)).ToListAsync();
             if (cartItems == null)

@@ -134,3 +134,4 @@ namespace Shopping.Migrations
         }
     }
 }
+

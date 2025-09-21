@@ -23,7 +23,7 @@ namespace Identity.Models
         [Required]
         public string City { get; set; } = string.Empty;
         [Required]
-        public PriviledgeLevel PriviledgeLevel { get; set; } = PriviledgeLevel.NotAssigned;
+        public PrivilegeLevel PriviledgeLevel { get; set; } = PrivilegeLevel.NotAssigned;
 
         public AccountDto ToDto() => new AccountDto
         {
@@ -49,3 +49,4 @@ namespace Identity.Models
         }
     }
 }
+

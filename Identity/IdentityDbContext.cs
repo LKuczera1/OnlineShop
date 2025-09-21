@@ -9,3 +9,4 @@ namespace Catalog
         public IdentityDbContext(DbContextOptions<IdentityDbContext> options) : base(options) { }
     }
 }
+

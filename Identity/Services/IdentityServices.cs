@@ -4,6 +4,8 @@ using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Utility.Common;
+using Utility.DtoEntity;
 using Utility.Enums;
 
 namespace Identity.Services
@@ -36,7 +38,7 @@ namespace Identity.Services
         }
 
         //Get by Id
-        public async Task<ActionResult<AccountDto>> GetAccountById(int id)
+        public async Task<ActionResult<AccountDto>> GetAccountById(int id, UserData userData)
         {
             var account = await _context.Set<Account>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
 
@@ -45,15 +47,43 @@ namespace Identity.Services
                 return new NotFoundResult();
             }
 
-            return account.ToDto();
+            switch (userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    return account.ToDto();
+                    break;
+                case PrivilegeLevel.SalesDepartmentWorker:
+                case PrivilegeLevel.Customer:
+                    if (account.Id != userData.clientId) return new ForbidResult();
+
+                    return account.ToDto();
+
+                    break;
+                default: return new ForbidResult();
+            }
         }
 
         //Put
-        public async Task<IActionResult> PutAccount(int id, AccountDto dto)
+        public async Task<IActionResult> PutAccount(int id, AccountDto dto, UserData userData)
         {
-            var entity = await _context.Set<Account>().FindAsync([id]);
+            var entity = await _context.Set<Account>().FindAsync(id);
             if (entity is null)
-                return new NotFoundResult();
+                return new NotFoundResult(); 
+            
+            switch (userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    entity.FromDto(id, dto);
+                    break;
+                case PrivilegeLevel.SalesDepartmentWorker:
+                case PrivilegeLevel.Customer:
+                    if (entity.Id != userData.clientId) return new ForbidResult();
+
+                    entity.FromDto(id, dto);
+
+                    break;
+                default: return new ForbidResult();
+            }
 
             entity.FromDto(id, dto);
 
@@ -65,18 +95,24 @@ namespace Identity.Services
         }
 
         //Post
-        public async Task<ActionResult<AccountDto>> PostAccount(AccountDto dto)
+        public async Task<ActionResult<AccountDto>> PostAccount(AccountDto dto, UserData userData)
         {
             var entity = dto.ToEntity(0);
 
-            _context.Set<Account>().Add(entity);
-            await _context.SaveChangesAsync();
+            switch (userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    _context.Set<Account>().Add(entity);
+                    await _context.SaveChangesAsync();
+                    break;
+                default: return new ForbidResult();
+            }
 
             return new CreatedAtRouteResult(nameof(GetAccountById), new { id = entity.Id }, entity);
         }
 
         //Delete
-        public async Task<IActionResult> DeleteAccount(int id)
+        public async Task<IActionResult> DeleteAccount(int id, UserData userData)
         {
             var account = await _context.UserAccounts.FindAsync(id);
             if (account == null)
@@ -84,21 +120,35 @@ namespace Identity.Services
                 return new NotFoundResult();
             }
 
-            _context.UserAccounts.Remove(account);
-            await _context.SaveChangesAsync();
+            switch (userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    _context.UserAccounts.Remove(account);
+                    await _context.SaveChangesAsync();
+                    break;
+                default: return new ForbidResult();
+            }
 
             return new NoContentResult();
         }
 
-        public async Task<IActionResult> SetPriviledgeLevel(int id, PriviledgeLevel priviledgeLevel)
+        public async Task<IActionResult> SetPriviledgeLevel(int id, PrivilegeLevel priviledgeLevel, UserData userData)
         {
             var entity = await _context.Set<Account>().FindAsync([id]);
             if (entity is null)
-                return new NotFoundResult();
+                return new NotFoundResult(); 
+            
+            switch (userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    entity.PriviledgeLevel = priviledgeLevel;
 
-            entity.PriviledgeLevel = priviledgeLevel;
+                    await _context.SaveChangesAsync();
+                    break;
+                default: return new ForbidResult();
+            }
 
-            await _context.SaveChangesAsync();
+            
             return new NoContentResult();
         }
 
@@ -146,7 +196,7 @@ namespace Identity.Services
                 return new BadRequestObjectResult("Account with this username already exists.");
             }
 
-            account.PriviledgeLevel = PriviledgeLevel.Customer;
+            account.PriviledgeLevel = PrivilegeLevel.Customer;
 
             account.Password = HashPassword(account);
 

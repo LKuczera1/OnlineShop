@@ -18,19 +18,22 @@ namespace Shopping.Services
         }
 
         //Get
-        public async Task<IEnumerable<WishlistItemDto>> GetWishlistItems(int? userId = null)
+        public async Task<IEnumerable<WishlistItemDto>> GetWishlistItems(UserData userData)
         {
             List<WishlistItem> wishlistItemsList;
 
-            if (userId == null)
+            switch(userData.priviledgeLevel)
             {
-                wishlistItemsList = await _context.Set<WishlistItem>().ToListAsync();
-            }
-            else
-            {
-                wishlistItemsList = await _context.Set<WishlistItem>()
-                                                  .Where(w => w.ClientId == userId)
+                case PrivilegeLevel.Admin:
+                    wishlistItemsList = await _context.Set<WishlistItem>().ToListAsync();
+                    break;
+                case PrivilegeLevel.Customer:
+                    wishlistItemsList = await _context.Set<WishlistItem>()
+                                                  .Where(w => w.ClientId == userData.clientId)
                                                   .ToListAsync();
+                    break;
+                default:
+                    return null;
             }
 
             var wishlist = wishlistItemsList.Select(p => p.ToDto());
@@ -45,10 +48,10 @@ namespace Shopping.Services
 
             switch(userData.priviledgeLevel)
             {
-                case PriviledgeLevel.Admin:
+                case PrivilegeLevel.Admin:
                     wishlistItem = await _context.Set<WishlistItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
                     break;
-                case PriviledgeLevel.Customer:
+                case PrivilegeLevel.Customer:
                     if (userData.clientId is null) return new BadRequestResult();
                     wishlistItem = await _context.Set<WishlistItem>().Where(c =>
                     c.Id.Equals(id) && c.ClientId.Equals(userData.clientId)).SingleOrDefaultAsync();
@@ -75,12 +78,12 @@ namespace Shopping.Services
 
             switch (userData.priviledgeLevel)
             {
-                case PriviledgeLevel.Admin:
+                case PrivilegeLevel.Admin:
 
                     entity.FromDto(id, dto);
 
                     break;
-                case PriviledgeLevel.Customer:
+                case PrivilegeLevel.Customer:
 
                     if (userData.clientId is null)
                         return new UnauthorizedResult();
@@ -109,12 +112,12 @@ namespace Shopping.Services
 
             switch (userData.priviledgeLevel)
             {
-                case PriviledgeLevel.Admin:
+                case PrivilegeLevel.Admin:
 
                     //Nothing to do here
 
                     break;
-                case PriviledgeLevel.Customer:
+                case PrivilegeLevel.Customer:
 
                     if (userData.clientId is null)
                         return new UnauthorizedResult();
@@ -143,12 +146,12 @@ namespace Shopping.Services
 
             switch (userData.priviledgeLevel)
             {
-                case PriviledgeLevel.Admin:
+                case PrivilegeLevel.Admin:
 
                     //Nothing to do here
 
                     break;
-                case PriviledgeLevel.Customer:
+                case PrivilegeLevel.Customer:
 
                     if (userData.clientId is null)
                         return new UnauthorizedResult();

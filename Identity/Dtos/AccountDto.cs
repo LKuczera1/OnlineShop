@@ -14,7 +14,7 @@ namespace Identity.Dtos
         public string Address { get; set; }
         public string City { get; set; }
 
-        public PriviledgeLevel PriviledgeLevel { get; set; }
+        public PrivilegeLevel PriviledgeLevel { get; set; }
 
         public Account ToEntity(int id) => new Account
         {
@@ -29,3 +29,4 @@ namespace Identity.Dtos
         };
     }
 }
+

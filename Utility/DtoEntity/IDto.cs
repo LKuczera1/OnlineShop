@@ -11,3 +11,4 @@ namespace Utility.DtoEntity
         public TEntity ToEntity(int id);
     }
 }
+

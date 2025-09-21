@@ -10,13 +10,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utility.Common;
 using Utility.Enums;
 
 namespace Identity.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountsController : ControllerBase
+    public class AccountsController : CustomControllerBase
     {
         private readonly IdentityServices _context;
 
@@ -35,27 +36,27 @@ namespace Identity.Controllers
 
         // GET: api/Accounts/5
         [HttpGet("{id}", Name = "GetAccountById")]
-        [Authorize(Roles = RolesStr.Admin)]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
         public async Task<ActionResult<AccountDto>> GetAccount(int id)
         {
-            return await _context.GetAccountById(id);
+            return await _context.GetAccountById(id, GetUserData());
         }
 
         // PUT: api/Accounts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        [Authorize(Roles = RolesStr.Admin)]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
         public async Task<IActionResult> PutAccount(int id, AccountDto account)
         {
-            return await _context.PutAccount(id, account);
+            return await _context.PutAccount(id, account, GetUserData());
         }
 
         // PUT: api/Accounts/5
         [HttpPut("setPriviledgeLevel/{id}/{priviledgeLevel}")]
         [Authorize(Roles = RolesStr.Admin)]
-        public async Task<IActionResult> SetPriviledgeLevel(int id, PriviledgeLevel priviledgeLevel)
+        public async Task<IActionResult> SetPriviledgeLevel(int id, PrivilegeLevel priviledgeLevel)
         {
-            return await _context.SetPriviledgeLevel(id, priviledgeLevel);
+            return await _context.SetPriviledgeLevel(id, priviledgeLevel, GetUserData());
         }
 
 
@@ -65,7 +66,7 @@ namespace Identity.Controllers
         [Authorize(Roles = RolesStr.Admin)]
         public async Task<ActionResult<AccountDto>> PostAccount(AccountDto account)
         {
-            return await _context.PostAccount(account);
+            return await _context.PostAccount(account, GetUserData());
         }
 
         [HttpPost("login")]
@@ -85,7 +86,7 @@ namespace Identity.Controllers
         [Authorize(Roles = RolesStr.Admin)]
         public async Task<IActionResult> DeleteAccount(int id)
         {
-            return await _context.DeleteAccount(id);
+            return await _context.DeleteAccount(id, GetUserData());
         }
 
         /*

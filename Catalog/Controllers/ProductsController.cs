@@ -4,13 +4,14 @@ using Catalog.Models;
 using Catalog.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Utility.Common;
 using Utility.Enums;
 
 namespace Catalog.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : CustomControllerBase
     {
         private readonly CatalogServices _context;
 
@@ -39,7 +40,7 @@ namespace Catalog.Controllers
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<IActionResult> PutProduct(int id, ProductDto dto)
         {
-            return await _context.PutProduct(id, dto);
+            return await _context.PutProduct(id, dto, GetUserData());
         }
 
         // POST: api/Products
@@ -48,7 +49,7 @@ namespace Catalog.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductDto>> PostProduct(ProductDto dto)
         {
-            return await _context.PostProduct(dto);
+            return await _context.PostProduct(dto, GetUserData());
         }
 
         // DELETE: api/Products/5
@@ -56,7 +57,7 @@ namespace Catalog.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            return await _context.DeleteProduct(id);
+            return await _context.DeleteProduct(id, GetUserData());
         }
 
         /*
