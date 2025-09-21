@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Catalog/Migrations/20250914155009_InitialCreate.cs
+
