@@ -134,10 +134,56 @@ namespace Shopping.Services.Facade
                 return new NotFoundResult();
             }
 
-            if (order.Value.ClientId != (int)userData.clientId 
+            if (order.Value.ClientId != (int)userData.clientId
                 && userData.priviledgeLevel == PrivilegeLevel.Customer) return new BadRequestResult();
 
             return order.Value.ToOrderStatus();
+        }
+        public async Task<ActionResult> SetOrderStatus(int orderId, UserData userData, OrderStatus status)
+        {
+            var order = await _orderService.GetOrderById(orderId, userData);
+
+            if (order.Result is NotFoundObjectResult || order is null)
+            {
+                return new NotFoundResult();
+            }
+
+            switch(userData.priviledgeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                case PrivilegeLevel.SalesDepartmentWorker:
+
+                    if (!IsOrderStatusInRange(status)) return new BadRequestObjectResult("Invalid order status.");
+
+                    if (order.Value.Status > status || order.Value.Status+1 != status) return new BadRequestObjectResult("Invalid order status.");
+
+                    order.Value.Status = status;
+
+                    switch (order.Value.Status)
+                    {
+                        case OrderStatus.Paid:
+                            order.Value.OrderTime = DateTime.Now;
+                            break;
+                        case OrderStatus.InRealisation:
+                            order.Value.PackedTime = DateTime.Now;
+                            break;
+                        case OrderStatus.InDelivery:
+                            order.Value.SendTime = DateTime.Now;
+                            break;
+                        case OrderStatus.Delivered:
+                            order.Value.DeliveredTime = DateTime.Now;
+                            break;
+                    }
+
+                    break;
+                default: return new BadRequestResult();
+            }
+
+            return new OkResult();
+        }
+        public bool IsOrderStatusInRange(OrderStatus status)
+        {
+            return Enum.IsDefined(typeof(OrderStatus), status);
         }
     }
 }

@@ -88,6 +88,13 @@ namespace Shopping.Controllers
             return await _shoppingFacade.PlaceOrder(GetUserData());
         }
 
+        [HttpGet("{orderId}/set-status/{status}")]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
+        public async Task<ActionResult> SetOrderStatus(int orderId, OrderStatus status)
+        {
+            return await _shoppingFacade.SetOrderStatus(orderId, GetUserData(), status);
+        }
+
         [HttpGet("{orderId}/status")]
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
         public async Task<ActionResult<OrderStatusDto>> GetOrderStatus(int orderId)
