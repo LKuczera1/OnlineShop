@@ -170,6 +170,9 @@ namespace Shopping.Services
                 case PrivilegeLevel.SalesDepartmentWorker:
                     ordersList = await _context.Set<Order>().ToListAsync();
                     break;
+                case PrivilegeLevel.Customer:
+                    ordersList = await _context.Set<Order>().Where(p => p.ClientId.Equals(userData.clientId)).ToListAsync();
+                    break;
                 default: 
                     ordersList = new List<Order>();
                     ordersList.Clear();
@@ -191,6 +194,9 @@ namespace Shopping.Services
                 case PrivilegeLevel.Admin:
                 case PrivilegeLevel.SalesDepartmentWorker:
                     order = await _context.Set<Order>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
+                    break;
+                case PrivilegeLevel.Customer:
+                    order = await _context.Set<Order>().Where(c => c.Id.Equals(id) || c.ClientId.Equals(userData.clientId)).SingleOrDefaultAsync();
                     break;
                 default: return new ForbidResult();
             }

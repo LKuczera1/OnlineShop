@@ -32,7 +32,7 @@ namespace Shopping.Controllers
 
         // GET: api/Orders
         [HttpGet]
-        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
         public async Task<IEnumerable<OrderDto>> GetOrders()
         {
             return await _context.GetOrders(GetUserData());
@@ -40,7 +40,7 @@ namespace Shopping.Controllers
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
         public async Task<ActionResult<OrderDto>> GetOrderById(int id)
         {
             return await _context.GetOrderById(id, GetUserData());
@@ -88,8 +88,8 @@ namespace Shopping.Controllers
             return await _shoppingFacade.PlaceOrder(GetUserData());
         }
 
-        [HttpGet("{orderId}/set-status/{status}")]
-        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
+        [HttpPut("{orderId}/set-status/{status}")]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         public async Task<ActionResult> SetOrderStatus(int orderId, OrderStatus status)
         {
             return await _shoppingFacade.SetOrderStatus(orderId, GetUserData(), status);
