@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /Catalog/Migrations/20250914155009_InitialCreate.cs
 
+/UnitTests/UnitTests.csproj
