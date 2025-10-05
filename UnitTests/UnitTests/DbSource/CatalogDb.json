@@ -1,0 +1,44 @@
+﻿[
+    {
+        "Id": 1,
+        "Name": "ProduktTestowy1",
+        "Description": "Opis Testowy 1",
+        "Price": 10,
+        "Stock": 20
+    },
+    {
+        "Id": 2,
+        "Name": "ProduktTestowy2",
+        "Description": "Opis Testowy 2",
+        "Price": 20,
+        "Stock": 30
+    },
+    {
+        "Id": 3,
+        "Name": "ProduktTestowy1...",
+        "Description": "Opis Testowy 1....",
+        "Price": 10,
+        "Stock": 20
+    },
+    {
+        "Id": 4,
+        "Name": "ProduktTestowy2",
+        "Description": "Opis Testowy 2....",
+        "Price": 20,
+        "Stock": 30
+    },
+    {
+        "Id": 5,
+        "Name": "ProduktTestowy1",
+        "Description": "Opis Testowy 1....",
+        "Price": 10,
+        "Stock": 20
+    },
+    {
+        "Id": 6,
+        "Name": "ProduktTestowy2",
+        "Description": "Opis Testowy 2....",
+        "Price": 20,
+        "Stock": 30
+    }
+]

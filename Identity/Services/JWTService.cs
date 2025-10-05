@@ -16,7 +16,7 @@ namespace Identity.Services
 
         public string GenerateToken(int userId, string userName, string priviledgeLevel)
         {
-            // pobranie ustawień z appsettings.json
+            //pobranie ustawień z appsettings.json
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
