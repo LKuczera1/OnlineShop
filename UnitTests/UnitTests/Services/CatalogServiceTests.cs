@@ -55,7 +55,7 @@ namespace UnitTests.UnitTests.Services
             var result1 = await _service.GetProductById(1);
             var result2 = await _service.GetProductById(100);
 
-            Assert.NotNull(result1);
+            Assert.True(result1.Value != null);
             Assert.IsType<NotFoundResult>(result2.Result);
         }
 
