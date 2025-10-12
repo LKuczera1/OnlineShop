@@ -6,7 +6,7 @@ using Utility.DtoEntity;
 
 namespace Shopping.Models
 {
-    public class OrderedItem :IEntity<OrderedItemDto>
+    public class OrderedItem : IEntity<OrderedItemDto>
     {
         [Key]
         public int Id { get; set; }
@@ -37,3 +37,4 @@ namespace Shopping.Models
         }
     }
 }
+

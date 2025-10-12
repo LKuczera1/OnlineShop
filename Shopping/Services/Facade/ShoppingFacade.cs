@@ -39,14 +39,14 @@ namespace Shopping.Services.Facade
 
             var product = _catalogResolver.ResolveForProduct(wishlistItem.Value!.ProductId).Result;
 
-            if(product == null)
+            if (product == null)
             {
                 return new NotFoundResult();
             }
 
             ShoppingCartItemDto item;
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
 
@@ -87,7 +87,7 @@ namespace Shopping.Services.Facade
 
         public async Task<ActionResult> PlaceOrder(UserData userData)
         {
-            if (userData.clientId is null || userData.priviledgeLevel != PrivilegeLevel.Customer) return new BadRequestResult();
+            if (userData.clientId is null || userData.privilegeLevel != PrivilegeLevel.Customer) return new BadRequestResult();
 
             var clientOrder = await _cartService.GetShoppingCartItemByClientId((int)userData.clientId, userData);
 
@@ -135,7 +135,7 @@ namespace Shopping.Services.Facade
             }
 
             if (order.Value.ClientId != (int)userData.clientId
-                && userData.priviledgeLevel == PrivilegeLevel.Customer) return new BadRequestResult();
+                && userData.privilegeLevel == PrivilegeLevel.Customer) return new BadRequestResult();
 
             return order.Value.ToOrderStatus();
         }
@@ -148,14 +148,14 @@ namespace Shopping.Services.Facade
                 return new NotFoundResult();
             }
 
-            switch(userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                 case PrivilegeLevel.SalesDepartmentWorker:
 
                     if (!IsOrderStatusInRange(status)) return new BadRequestObjectResult("Invalid order status.");
 
-                    if (order.Value.Status > status || order.Value.Status+1 != status) return new BadRequestObjectResult("Invalid order status.");
+                    if (order.Value.Status > status || order.Value.Status + 1 != status) return new BadRequestObjectResult("Invalid order status.");
 
                     order.Value.Status = status;
 
@@ -187,3 +187,4 @@ namespace Shopping.Services.Facade
         }
     }
 }
+

@@ -4,7 +4,7 @@ using Utility.DtoEntity;
 
 namespace Catalog.Models
 {
-    public class Product: IEntity<ProductDto>
+    public class Product : IEntity<ProductDto>
     {
         [Key]
         public int Id { get; set; }
@@ -35,4 +35,5 @@ namespace Catalog.Models
         }
     }
 }
+
 

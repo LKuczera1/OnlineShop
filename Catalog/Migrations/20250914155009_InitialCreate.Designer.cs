@@ -54,3 +54,4 @@ namespace Catalog.Migrations
         }
     }
 }
+

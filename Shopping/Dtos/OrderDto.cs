@@ -4,7 +4,7 @@ using Shopping.Models;
 
 namespace Shopping.Dtos
 {
-    public class OrderDto :IDto<Order>
+    public class OrderDto : IDto<Order>
     {
         public int OrderId { get; set; }
         public int ClientId { get; set; }
@@ -37,4 +37,5 @@ namespace Shopping.Dtos
         };
     }
 }
+
 

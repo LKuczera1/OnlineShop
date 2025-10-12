@@ -6,7 +6,7 @@ using Utility.Enums;
 
 namespace Identity.Models
 {
-    public class Account :IEntity<AccountDto>
+    public class Account : IEntity<AccountDto>
     {
         [Key]
         public int Id { get; set; }
@@ -17,13 +17,13 @@ namespace Identity.Models
         [Required]
         public string Email { get; set; }
         [AllowNull]
-        public string PhoneNumber { get; set; } = string.Empty;
+        public string? PhoneNumber { get; set; } = string.Empty;
         [Required]
         public string Address { get; set; } = string.Empty;
         [Required]
         public string City { get; set; } = string.Empty;
         [Required]
-        public PrivilegeLevel PriviledgeLevel { get; set; } = PrivilegeLevel.NotAssigned;
+        public PrivilegeLevel PrivilegeLevel { get; set; } = PrivilegeLevel.NotAssigned;
 
         public AccountDto ToDto() => new AccountDto
         {
@@ -33,7 +33,7 @@ namespace Identity.Models
             PhoneNumber = PhoneNumber,
             Address = Address,
             City = City,
-            PriviledgeLevel = PriviledgeLevel
+            PrivilegeLevel = PrivilegeLevel
         };
 
         public void FromDto(int id, AccountDto dto)
@@ -45,8 +45,9 @@ namespace Identity.Models
             PhoneNumber = dto.PhoneNumber;
             Address = dto.Address;
             City = dto.City;
-            PriviledgeLevel = PriviledgeLevel;
+            PrivilegeLevel = PrivilegeLevel;
         }
     }
 }
+
 

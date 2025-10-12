@@ -1,0 +1,42 @@
+﻿[
+    {
+        "Id": 1,
+        "UserName": "TestAccount1",
+        "Password": "AQAAAAIAAYagAAAAEKwJRe926Lw71ynJaZSlFrdNeSmd0P3oVYX6HCQX8g1mZ0wbGUu4ydIo48Z917Jf1A==",
+        "Email": "testingemail@test.com",
+        "PhoneNumber": "123456789",
+        "Address": "Test",
+        "City": "TestTown",
+        "PrivilegeLevel": 1
+    },
+    {
+        "Id": 2,
+        "UserName": "FakeAccount-WrongPassword2",
+        "Password": "423554436346",
+        "Email": "testingemail@test.com",
+        "PhoneNumber": "1234564789",
+        "Address": "Test",
+        "City": "TestTown",
+        "PrivilegeLevel": 2
+    },
+    {
+        "Id": 3,
+        "UserName": "FakeAccount-WrongPassword3",
+        "Password": "5435435435435",
+        "Email": "testingemail@test.com",
+        "PhoneNumber": "1234556789",
+        "Address": "Test",
+        "City": "TestTown",
+        "PrivilegeLevel": 2
+    },
+    {
+        "Id": 4,
+        "UserName": "FakeAccount-WrongPassword4",
+        "Password": "5435435435435333333",
+        "Email": "testingemail@test.com",
+        "PhoneNumber": "1234536789",
+        "Address": "Test",
+        "City": "TestTown",
+        "PrivilegeLevel": 2
+    }
+]

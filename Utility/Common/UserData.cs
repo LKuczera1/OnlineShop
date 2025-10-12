@@ -7,6 +7,7 @@ using Utility.Enums;
 
 namespace Utility.Common
 {
-    public record UserData(int? clientId, PrivilegeLevel priviledgeLevel);
+    public record UserData(int? clientId, PrivilegeLevel privilegeLevel);
 }
+
 

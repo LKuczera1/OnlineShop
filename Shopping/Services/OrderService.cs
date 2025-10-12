@@ -24,7 +24,7 @@ namespace Shopping.Services
         {
             List<OrderedItem>? orderItemsList;
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     orderItemsList = await _context.Set<OrderedItem>().ToListAsync();
@@ -47,7 +47,7 @@ namespace Shopping.Services
 
                     var order = await GetOrderById((int)orderId, userData);
 
-                    if(order.Result is ForbidResult or NotFoundResult || order.Value is null) return new BadRequestResult();
+                    if (order.Result is ForbidResult or NotFoundResult || order.Value is null) return new BadRequestResult();
 
                     orderItemsList = await _context.Set<OrderedItem>()
                         .Where(i => i.OrderId.Equals(order.Value.OrderId)).ToListAsync();
@@ -67,7 +67,7 @@ namespace Shopping.Services
         {
             OrderedItem? orderItem;
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                 case PrivilegeLevel.SalesDepartmentWorker:
@@ -85,7 +85,7 @@ namespace Shopping.Services
 
                     if (order.Result is ForbidResult or NotFoundResult || order.Value is null) return new BadRequestResult();
 
-                    orderItem = await _context.Set<OrderedItem>().Where(c => c.Id.Equals(id) 
+                    orderItem = await _context.Set<OrderedItem>().Where(c => c.Id.Equals(id)
                         && c.OrderId.Equals(order.Value.ClientId)).SingleOrDefaultAsync();
 
                     break;
@@ -107,7 +107,7 @@ namespace Shopping.Services
             if (entity is null)
                 return new NotFoundResult();
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
 
@@ -132,6 +132,8 @@ namespace Shopping.Services
         //Post
         public async Task<ActionResult<OrderedItemDto>> PostOrderItem(OrderedItemDto dto, UserData? userData = null)
         {
+            if (userData.privilegeLevel != PrivilegeLevel.Admin) return new ForbidResult();
+
             var entity = dto.ToEntity(0);
 
 
@@ -150,6 +152,20 @@ namespace Shopping.Services
                 return new NotFoundResult();
             }
 
+            switch (userData.privilegeLevel)
+            {
+                case PrivilegeLevel.Admin:
+                    break;
+                case PrivilegeLevel.SalesDepartmentWorker:
+                    break;
+                case PrivilegeLevel.Customer:
+                    return new ForbidResult();
+                    break;
+                default:
+                    return new ForbidResult();
+                    break;
+            }
+
             _context.OrderedItems.Remove(orderItem);
             await _context.SaveChangesAsync();
 
@@ -162,7 +178,7 @@ namespace Shopping.Services
         {
             List<Order> ordersList;
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     ordersList = await _context.Set<Order>().ToListAsync();
@@ -173,7 +189,7 @@ namespace Shopping.Services
                 case PrivilegeLevel.Customer:
                     ordersList = await _context.Set<Order>().Where(p => p.ClientId.Equals(userData.clientId)).ToListAsync();
                     break;
-                default: 
+                default:
                     ordersList = new List<Order>();
                     ordersList.Clear();
                     break;
@@ -189,14 +205,14 @@ namespace Shopping.Services
         {
             Order? order;
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                 case PrivilegeLevel.SalesDepartmentWorker:
                     order = await _context.Set<Order>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
                     break;
                 case PrivilegeLevel.Customer:
-                    order = await _context.Set<Order>().Where(c => c.Id.Equals(id) || c.ClientId.Equals(userData.clientId)).SingleOrDefaultAsync();
+                    order = await _context.Set<Order>().Where(c => c.Id.Equals(id) && c.ClientId.Equals(userData.clientId)).SingleOrDefaultAsync();
                     break;
                 default: return new ForbidResult();
             }
@@ -214,7 +230,7 @@ namespace Shopping.Services
         {
             Order? entity;
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                 case PrivilegeLevel.SalesDepartmentWorker:
@@ -239,7 +255,7 @@ namespace Shopping.Services
         {
             var entity = dto.ToEntity(0);
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                 case PrivilegeLevel.SalesDepartmentWorker:
@@ -262,7 +278,7 @@ namespace Shopping.Services
                 return new NotFoundResult();
             }
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                 case PrivilegeLevel.SalesDepartmentWorker:
@@ -282,3 +298,4 @@ namespace Shopping.Services
 
     }
 }
+

@@ -3,7 +3,7 @@ using Shopping.Models;
 
 namespace Shopping
 {
-    public class ShoppingDbContext :DbContext
+    public class ShoppingDbContext : DbContext
     {
         public DbSet<WishlistItem> Wishlist { get; set; }
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
@@ -18,4 +18,5 @@ namespace Shopping
         }
     }
 }
+
 

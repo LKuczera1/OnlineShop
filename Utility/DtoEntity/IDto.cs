@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Utility.DtoEntity
 {
-    public interface IDto <TEntity>
+    public interface IDto<TEntity>
     {
         public TEntity ToEntity(int id);
     }
 }
+
 

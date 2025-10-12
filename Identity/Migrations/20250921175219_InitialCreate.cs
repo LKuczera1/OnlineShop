@@ -22,7 +22,7 @@ namespace Identity.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PriviledgeLevel = table.Column<int>(type: "int", nullable: false)
+                    PrivilegeLevel = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,3 +38,4 @@ namespace Identity.Migrations
         }
     }
 }
+

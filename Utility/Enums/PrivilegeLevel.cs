@@ -19,7 +19,7 @@
         //Combinations
         public const string Admin_SalesDepartmentWorker = Admin + "," + SalesDepartmentWorker;
         public const string Admin_Customer = Admin + "," + Customer;
-        public const string Admin_SalesDepartmentWorker_Customer = Admin + "," + SalesDepartmentWorker +"," + Customer;
+        public const string Admin_SalesDepartmentWorker_Customer = Admin + "," + SalesDepartmentWorker + "," + Customer;
 
 
         //abandoned
@@ -38,7 +38,7 @@
 
         public static PrivilegeLevel RoleToEnum(string role)
         {
-            switch(role)
+            switch (role)
             {
                 case RolesStr.Admin: return PrivilegeLevel.Admin;
                 case RolesStr.Customer: return PrivilegeLevel.Customer;
@@ -49,4 +49,5 @@
         }
     }
 }
+
 

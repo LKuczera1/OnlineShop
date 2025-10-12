@@ -4,7 +4,7 @@ using Shopping.Dtos;
 
 namespace Shopping.Models
 {
-    public class WishlistItem :IEntity<WishlistItemDto>
+    public class WishlistItem : IEntity<WishlistItemDto>
     {
         [Key]
         public int Id { get; set; }
@@ -31,4 +31,5 @@ namespace Shopping.Models
         }
     }
 }
+
 

@@ -47,7 +47,7 @@ namespace Identity.Services
                 return new NotFoundResult();
             }
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     return account.ToDto();
@@ -68,9 +68,9 @@ namespace Identity.Services
         {
             var entity = await _context.Set<Account>().FindAsync(id);
             if (entity is null)
-                return new NotFoundResult(); 
-            
-            switch (userData.priviledgeLevel)
+                return new NotFoundResult();
+
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     entity.FromDto(id, dto);
@@ -99,7 +99,7 @@ namespace Identity.Services
         {
             var entity = dto.ToEntity(0);
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     _context.Set<Account>().Add(entity);
@@ -120,7 +120,7 @@ namespace Identity.Services
                 return new NotFoundResult();
             }
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     _context.UserAccounts.Remove(account);
@@ -132,23 +132,23 @@ namespace Identity.Services
             return new NoContentResult();
         }
 
-        public async Task<IActionResult> SetPriviledgeLevel(int id, PrivilegeLevel priviledgeLevel, UserData userData)
+        public async Task<IActionResult> SetPrivilegeLevel(int id, PrivilegeLevel privilegeLevel, UserData userData)
         {
             var entity = await _context.Set<Account>().FindAsync([id]);
             if (entity is null)
-                return new NotFoundResult(); 
-            
-            switch (userData.priviledgeLevel)
+                return new NotFoundResult();
+
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
-                    entity.PriviledgeLevel = priviledgeLevel;
+                    entity.PrivilegeLevel = privilegeLevel;
 
                     await _context.SaveChangesAsync();
                     break;
                 default: return new ForbidResult();
             }
 
-            
+
             return new NoContentResult();
         }
 
@@ -158,9 +158,9 @@ namespace Identity.Services
 
             if (entity == null) return new NotFoundObjectResult("Account with such username was not found");
 
-            if(VerifyPassword(loginRequest, entity.ToDto()) == PasswordVerificationResult.Success)
+            if (VerifyPassword(loginRequest, entity.ToDto()) == PasswordVerificationResult.Success)
             {
-                var JWTtoken = _jwtService.GenerateToken(entity.Id, entity.UserName, entity.PriviledgeLevel.ToString());
+                var JWTtoken = _jwtService.GenerateToken(entity.Id, entity.UserName, entity.PrivilegeLevel.ToString());
 
                 return new OkObjectResult(new AuthResponseDto
                 {
@@ -168,7 +168,7 @@ namespace Identity.Services
                     ExpiresAt = DateTime.UtcNow.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]!)),
                     UserId = entity.Id,
                     UserName = entity.UserName,
-                    PriviledgeLevel = entity.PriviledgeLevel
+                    PrivilegeLevel = entity.PrivilegeLevel
                 });
             }
             else
@@ -188,15 +188,15 @@ namespace Identity.Services
                 return new BadRequestObjectResult("The registration form was not completed correctly");
             }
 
-            var entity = await _context.UserAccounts.FirstOrDefaultAsync(user => 
+            var entity = await _context.UserAccounts.FirstOrDefaultAsync(user =>
                 user.UserName.ToLower() == account.UserName.ToLower());
 
-            if(entity != null)
+            if (entity != null)
             {
                 return new BadRequestObjectResult("Account with this username already exists.");
             }
 
-            account.PriviledgeLevel = PrivilegeLevel.Customer;
+            account.PrivilegeLevel = PrivilegeLevel.Customer;
 
             account.Password = HashPassword(account);
 
@@ -217,3 +217,4 @@ namespace Identity.Services
         }
     }
 }
+

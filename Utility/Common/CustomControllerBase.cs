@@ -9,15 +9,13 @@ using Utility.Enums;
 
 namespace Utility.Common
 {
-    public class CustomControllerBase :ControllerBase
+    public class CustomControllerBase : ControllerBase
     {
         //public class UserData
         //{
         //    public int? ClientId { get; set; }
-        //    public PriviledgeLevel PriviledgeLevel { get; set; }
+        //    public PrivilegeLevel PrivilegeLevel { get; set; }
         //}
-
-        
 
         protected int? GetUserId()
         {
@@ -42,7 +40,7 @@ namespace Utility.Common
         {
             var role = GetUserRole();
 
-            if(role!=null) return RolesStr.RoleToEnum(role);
+            if (role != null) return RolesStr.RoleToEnum(role);
 
             return PrivilegeLevel.NotAssigned;
         }
@@ -54,8 +52,9 @@ namespace Utility.Common
 
         //protected UserData GetUserData()
         //{
-        //    return new UserData() { ClientId = GetUserId(), PriviledgeLevel = GetPrivilegeLevel() };
+        //    return new UserData() { ClientId = GetUserId(), PrivilegeLevel = GetPrivilegeLevel() };
         //}
     }
 }
+
 

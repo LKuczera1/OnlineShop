@@ -3,7 +3,7 @@ using Shopping.Models;
 
 namespace Shopping.Dtos
 {
-    public class ShoppingCartItemDto :IDto<ShoppingCartItem>
+    public class ShoppingCartItemDto : IDto<ShoppingCartItem>
     {
         public int ClientId { get; set; }
         public int ProductId { get; set; }
@@ -11,7 +11,7 @@ namespace Shopping.Dtos
         public double Price { get; set; }
 
         public ShoppingCartItem ToEntity(int id) => new ShoppingCartItem
-        { 
+        {
             Id = id,
             ClientId = ClientId,
             ProductId = ProductId,
@@ -29,4 +29,5 @@ namespace Shopping.Dtos
         };
     }
 }
+
 

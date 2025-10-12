@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+ï»¿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
@@ -63,13 +63,13 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-//Rejestracja serwisów i fasady w aplikacji
+//Rejestracja serwisÃ³w i fasady w aplikacji
 builder.Services.AddScoped<WishlistService>();
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ShoppingFacade>();
 
-//Ignorowanie controllerów z innych rest API
+//Ignorowanie controllerÃ³w z innych rest API
 builder.Services.AddControllers()
     .ConfigureApplicationPartManager(apm =>
     {
@@ -103,8 +103,8 @@ app.UseAuthorization();
 
 /*
 //Wymuszenie utworzenia resolvera
-//Facade wywo³uje metodê z Resolvera, resolver jest tworzony.
-//Innymi s³owy, builder tworzy wszystko "On Demand"
+//Facade wywoÅ‚uje metodÄ™ z Resolvera, resolver jest tworzony.
+//Innymi sÅ‚owy, builder tworzy wszystko "On Demand"
 app.Lifetime.ApplicationStarted.Register(() =>
 {
     using var scope = app.Services.CreateScope();
@@ -126,4 +126,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
 

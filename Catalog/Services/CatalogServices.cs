@@ -30,7 +30,7 @@ namespace Catalog.Services
         {
             var product = await _context.Set<Product>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
 
-            if(product == null)
+            if (product == null)
             {
                 return new NotFoundResult();
             }
@@ -41,7 +41,7 @@ namespace Catalog.Services
         //Put
         public async Task<IActionResult> PutProduct(int id, ProductDto dto, UserData userData)
         {
-            switch(userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case Utility.Enums.PrivilegeLevel.Admin:
                 case Utility.Enums.PrivilegeLevel.SalesDepartmentWorker:
@@ -65,7 +65,7 @@ namespace Catalog.Services
         //Post
         public async Task<ActionResult<ProductDto>> PostProduct(ProductDto dto, UserData userData)
         {
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case Utility.Enums.PrivilegeLevel.Admin:
                 case Utility.Enums.PrivilegeLevel.SalesDepartmentWorker:
@@ -85,7 +85,7 @@ namespace Catalog.Services
         //Delete
         public async Task<IActionResult> DeleteProduct(int id, UserData userData)
         {
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case Utility.Enums.PrivilegeLevel.Admin:
                 case Utility.Enums.PrivilegeLevel.SalesDepartmentWorker:
@@ -107,3 +107,4 @@ namespace Catalog.Services
         }
     }
 }
+

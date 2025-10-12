@@ -5,7 +5,7 @@ using Utility.Enums;
 namespace Identity.Dtos
 {
 
-    public class AccountDto :IDto<Account>
+    public class AccountDto : IDto<Account>
     {
         public string UserName { get; set; }
         public string Password { get; set; }
@@ -14,7 +14,7 @@ namespace Identity.Dtos
         public string Address { get; set; }
         public string City { get; set; }
 
-        public PrivilegeLevel PriviledgeLevel { get; set; }
+        public PrivilegeLevel PrivilegeLevel { get; set; }
 
         public Account ToEntity(int id) => new Account
         {
@@ -25,8 +25,9 @@ namespace Identity.Dtos
             PhoneNumber = PhoneNumber,
             Address = Address,
             City = City,
-            PriviledgeLevel = PriviledgeLevel
+            PrivilegeLevel = PrivilegeLevel
         };
     }
 }
+
 

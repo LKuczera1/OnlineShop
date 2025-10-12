@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Utility.DtoEntity
 {
-    public interface IEntity <TDto>
+    public interface IEntity<TDto>
     {
         public TDto ToDto();
 
         public void FromDto(int id, TDto dto);
     }
 }
+
 

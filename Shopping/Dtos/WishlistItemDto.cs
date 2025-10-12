@@ -3,7 +3,7 @@ using Shopping.Models;
 
 namespace Shopping.Dtos
 {
-    public class WishlistItemDto :IDto<WishlistItem>
+    public class WishlistItemDto : IDto<WishlistItem>
     {
         public int ClientId { get; set; }
         public int ProductId { get; set; }
@@ -18,4 +18,5 @@ namespace Shopping.Dtos
         };
     }
 }
+
 

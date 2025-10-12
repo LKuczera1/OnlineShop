@@ -22,7 +22,7 @@ namespace Shopping.Services
         {
             List<WishlistItem> wishlistItemsList;
 
-            switch(userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     wishlistItemsList = await _context.Set<WishlistItem>().ToListAsync();
@@ -46,7 +46,7 @@ namespace Shopping.Services
         {
             WishlistItem? wishlistItem;
 
-            switch(userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     wishlistItem = await _context.Set<WishlistItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
@@ -76,7 +76,7 @@ namespace Shopping.Services
             if (entity is null)
                 return new NotFoundResult();
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
 
@@ -110,7 +110,7 @@ namespace Shopping.Services
         {
             var entity = dto.ToEntity(0);
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
 
@@ -144,7 +144,7 @@ namespace Shopping.Services
                 return new NotFoundResult();
             }
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
 
@@ -171,3 +171,4 @@ namespace Shopping.Services
         }
     }
 }
+

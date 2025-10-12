@@ -14,12 +14,10 @@ using Xunit;
 
 namespace UnitTests.UnitTests.Services
 {
-    public class CatalogServiceTests :ServicesTestsBase
+    public class CatalogServiceTests : ServicesTestsBase
     {
         private readonly CatalogDbContext _db;
         private readonly Catalog.Services.CatalogServices _service;
-
-        private int productsCount;
 
         public CatalogServiceTests()
         {
@@ -53,7 +51,7 @@ namespace UnitTests.UnitTests.Services
         {
             //Since the service returns a dto that is missing an id,
             //we ask for 2 products, one of which has a non - existent id.
-            
+
             var result1 = await _service.GetProductById(1);
             var result2 = await _service.GetProductById(100);
 
@@ -78,7 +76,7 @@ namespace UnitTests.UnitTests.Services
 
             var response = await _service.PostProduct(newProduct, new UserData(0, privilegeLevel));
 
-            Assert.True(typeof(object).IsAssignableFrom(expectedResponseType));
+            Assert.IsType(expectedResponseType, response.Result);
         }
 
         [Theory]
@@ -102,7 +100,7 @@ namespace UnitTests.UnitTests.Services
 
             Assert.True(typeof(object).IsAssignableFrom(expectedResponseType));
 
-            if (response.GetType().Equals(typeof(BadRequestResult))) 
+            if (response.GetType().Equals(typeof(BadRequestResult)))
                 return; //We have received badrequestresult, there is no need to test if product has been really added to base
 
             var dto = await _service.GetProductById(prodId);
@@ -140,8 +138,8 @@ namespace UnitTests.UnitTests.Services
 
         private async Task<int?> GetNumberOfProducts()
         {
-            var list =  await _service.GetProducts();
-            if(list != null) return list.Count();
+            var list = await _service.GetProducts();
+            if (list != null) return list.Count();
 
             return 0;
         }
@@ -149,3 +147,4 @@ namespace UnitTests.UnitTests.Services
 
 
 }
+

@@ -3,12 +3,12 @@ using Utility.DtoEntity;
 
 namespace Catalog.Dtos
 {
-    public class ProductDto: IDto<Product>
+    public class ProductDto : IDto<Product>
     {
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public double Price { get; set; }
-            public double Stock { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public double Price { get; set; }
+        public double Stock { get; set; }
 
         public Product ToEntity(int id) => new Product
         {
@@ -20,4 +20,5 @@ namespace Catalog.Dtos
         };
     }
 }
+
 

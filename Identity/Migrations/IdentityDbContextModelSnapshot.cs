@@ -49,7 +49,7 @@ namespace Identity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PriviledgeLevel")
+                    b.Property<int>("PrivilegeLevel")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -64,3 +64,4 @@ namespace Identity.Migrations
         }
     }
 }
+

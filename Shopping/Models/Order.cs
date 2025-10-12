@@ -6,7 +6,7 @@ using Shopping.Dtos;
 
 namespace Shopping.Models
 {
-    public class Order :IEntity<OrderDto>
+    public class Order : IEntity<OrderDto>
     {
         [Key]
         public int Id { get; set; }
@@ -53,4 +53,5 @@ namespace Shopping.Models
         }
     }
 }
+
 

@@ -31,3 +31,4 @@ namespace Shopping.Resolvers
         }
     }
 }
+

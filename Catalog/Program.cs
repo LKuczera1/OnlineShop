@@ -1,4 +1,4 @@
-using Catalog;
+﻿using Catalog;
 using Catalog.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<CatalogDbContext>(
     options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Catalog;Trusted_Connection=True;"));
 
-//Wstrzykiwanie serwis�w
+//Wstrzykiwanie serwisów
 builder.Services.AddScoped<CatalogServices>();
 
 builder.Services.AddControllers();
@@ -94,4 +94,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
 

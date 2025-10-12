@@ -14,7 +14,7 @@ namespace Identity.Services
             _config = config;
         }
 
-        public string GenerateToken(int userId, string userName, string priviledgeLevel)
+        public string GenerateToken(int userId, string userName, string privilegeLevel)
         {
             //pobranie ustawień z appsettings.json
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
@@ -26,8 +26,8 @@ namespace Identity.Services
         {
 
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-            new Claim(ClaimTypes.Name, userName),                    
-            new Claim(ClaimTypes.Role, priviledgeLevel)                         
+            new Claim(ClaimTypes.Name, userName),
+            new Claim(ClaimTypes.Role, privilegeLevel)
         };
 
             var token = new JwtSecurityToken(
@@ -42,4 +42,5 @@ namespace Identity.Services
         }
     }
 }
+
 

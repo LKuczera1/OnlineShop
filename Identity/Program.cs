@@ -48,10 +48,11 @@ builder.Services.AddSwaggerGen(c =>
 
 //Rejestracja pliku json
 builder.Configuration.AddJsonFile(
-    new PhysicalFileProvider(AppContext.BaseDirectory),
-    "AppSettings/appsettings.json",
+    Utility.Common.Tools.GetPhysicalFileProviderToUtility(),
+    "AppSettings\\appsettings.json",
     optional: false,
     reloadOnChange: true);
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -93,4 +94,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
 

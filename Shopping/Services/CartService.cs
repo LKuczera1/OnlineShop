@@ -22,7 +22,7 @@ namespace Shopping.Services
         {
             List<ShoppingCartItem> cartItemsList;
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     cartItemsList = await _context.Set<ShoppingCartItem>().ToListAsync();
@@ -44,7 +44,7 @@ namespace Shopping.Services
         {
             ShoppingCartItem? cartItem;
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     cartItem = await _context.Set<ShoppingCartItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
@@ -70,10 +70,10 @@ namespace Shopping.Services
         {
             List<ShoppingCartItem>? order = await _context.Set<ShoppingCartItem>().Where(c => c.ClientId.Equals(ClientId)).ToListAsync();
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
-                    //Nothing to do here
+                //Nothing to do here
                 case PrivilegeLevel.Customer:
                     if (ClientId != userData.clientId) return new UnauthorizedResult();
                     break;
@@ -95,7 +95,7 @@ namespace Shopping.Services
             if (entity is null)
                 return new NotFoundResult();
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     entity.FromDto(id, dto);
@@ -119,7 +119,7 @@ namespace Shopping.Services
         {
             ShoppingCartItem entity;
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     entity = dto.ToEntity(0);
@@ -148,7 +148,7 @@ namespace Shopping.Services
                 return new NotFoundResult();
             }
 
-            switch (userData.priviledgeLevel)
+            switch (userData.privilegeLevel)
             {
                 case PrivilegeLevel.Admin:
                     //Nothing to do here
@@ -184,3 +184,4 @@ namespace Shopping.Services
         }
     }
 }
+
