@@ -12,9 +12,9 @@ w bazie **SQL Server**, A architektura systemu została oparta na ASP.NET Core W
 i stanowi przykład implementacji nowoczesnych aplikacji e-commerce w technologii .NET w architekturze mikroserwisów.
 
 # Repozytorium zawiera:
--Serwis **Catalog** - Przechowuje listę przedmiotów oferowanych przez sklep.
--Serwis **Identity** - Serwis odpowiedzialny za konta użytkowników oraz wydawanie tokenów JWT.
--Serwis **Shopping** - Odpowiedzialny za zarządzanie zamówieniami, koszykami i wishlistami użytkowników.
--Komplet testów jednostkowych dla każdego z serwisów.
+-**Serwis Catalog** - Przechowuje listę przedmiotów oferowanych przez sklep.
+-**Serwis Identity** - Serwis odpowiedzialny za konta użytkowników oraz wydawanie tokenów JWT.
+-**Serwis Shopping** - Odpowiedzialny za zarządzanie zamówieniami, koszykami i wishlistami użytkowników.
+-**Komplet testów jednostkowych** dla każdego z serwisów.
 
 Obecna wersja projektu to: 1.3
