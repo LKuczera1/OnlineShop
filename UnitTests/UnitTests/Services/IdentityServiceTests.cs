@@ -113,22 +113,22 @@ namespace UnitTests.UnitTests.Services
         // 3 tests for .GetAccountById(...), because there are more than 4 possible results
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin)]
-        [InlineData(PrivilegeLevel.Customer)]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker)]
-        [InlineData(PrivilegeLevel.NotAssigned)]
-        public async Task GetAccountById_NotFound(PrivilegeLevel role)
+        [InlineData(PriviledgeLevel.Admin)]
+        [InlineData(PriviledgeLevel.Customer)]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker)]
+        [InlineData(PriviledgeLevel.NotAssigned)]
+        public async Task GetAccountById_NotFound(PriviledgeLevel role)
         {
             var res = await _service.GetAccountById(9999, new UserData(0, role));
             Assert.IsType<NotFoundResult>(res.Result);
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, true)]
-        [InlineData(PrivilegeLevel.Customer, true)]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, true)]
-        [InlineData(PrivilegeLevel.NotAssigned, false)]
-        public async Task GetAccountById_Self(PrivilegeLevel role, bool shouldBeOk)
+        [InlineData(PriviledgeLevel.Admin, true)]
+        [InlineData(PriviledgeLevel.Customer, true)]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, true)]
+        [InlineData(PriviledgeLevel.NotAssigned, false)]
+        public async Task GetAccountById_Self(PriviledgeLevel role, bool shouldBeOk)
         {
             int myId = 1;
 
@@ -141,11 +141,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, true)]
-        [InlineData(PrivilegeLevel.Customer, false)]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, false)]
-        [InlineData(PrivilegeLevel.NotAssigned, false)]
-        public async Task GetAccountById_Other(PrivilegeLevel role, bool shouldBeOk)
+        [InlineData(PriviledgeLevel.Admin, true)]
+        [InlineData(PriviledgeLevel.Customer, false)]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, false)]
+        [InlineData(PriviledgeLevel.NotAssigned, false)]
+        public async Task GetAccountById_Other(PriviledgeLevel role, bool shouldBeOk)
         {
             int targetId = 1;     // istnieje
             int myId = 2;         // inny użytkownik
@@ -161,22 +161,22 @@ namespace UnitTests.UnitTests.Services
         //---------------------------------------------
 
         [Theory]
-        [InlineData(Utility.Enums.PrivilegeLevel.Admin)]
-        [InlineData(Utility.Enums.PrivilegeLevel.Customer)]
-        [InlineData(Utility.Enums.PrivilegeLevel.SalesDepartmentWorker)]
-        [InlineData(Utility.Enums.PrivilegeLevel.NotAssigned)]
-        public async Task PutAccountTest(PrivilegeLevel privilegeLevel)
+        [InlineData(Utility.Enums.PriviledgeLevel.Admin)]
+        [InlineData(Utility.Enums.PriviledgeLevel.Customer)]
+        [InlineData(Utility.Enums.PriviledgeLevel.SalesDepartmentWorker)]
+        [InlineData(Utility.Enums.PriviledgeLevel.NotAssigned)]
+        public async Task PutAccountTest(PriviledgeLevel privilegeLevel)
         {
             int accountId = 1;
 
-            var account = await _service.GetAccountById(accountId, new UserData(accountId, PrivilegeLevel.Admin));
+            var account = await _service.GetAccountById(accountId, new UserData(accountId, PriviledgeLevel.Admin));
 
             account.Value.UserName = privilegeLevel.ToString();
 
             var response = await _service.PutAccount(accountId, account.Value, new UserData(0, privilegeLevel));
 
             //Test - Only admin should be able to change account data with differend id
-            if (privilegeLevel == PrivilegeLevel.Admin)
+            if (privilegeLevel == PriviledgeLevel.Admin)
             {
                 Assert.IsType<NoContentResult>(response);
             }
@@ -185,11 +185,11 @@ namespace UnitTests.UnitTests.Services
                 Assert.IsType<ForbidResult>(response);
             }
 
-            if (privilegeLevel == PrivilegeLevel.NotAssigned) return;
+            if (privilegeLevel == PriviledgeLevel.NotAssigned) return;
 
             await _service.PutAccount(accountId, account.Value, new UserData(accountId, privilegeLevel));
 
-            var changedAccount = await _service.GetAccountById(accountId, new UserData(accountId, PrivilegeLevel.Admin));
+            var changedAccount = await _service.GetAccountById(accountId, new UserData(accountId, PriviledgeLevel.Admin));
 
             //Test to make sure database account data has changed
             Assert.True(changedAccount.Value.UserName == account.Value.UserName);
@@ -204,11 +204,11 @@ namespace UnitTests.UnitTests.Services
 
 
         [Theory]
-        [InlineData(Utility.Enums.PrivilegeLevel.Admin, typeof(CreatedAtRouteResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.Customer, typeof(ForbidResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task PostAccountTest(PrivilegeLevel privilegeLevel, Type expectedResponse)
+        [InlineData(Utility.Enums.PriviledgeLevel.Admin, typeof(CreatedAtRouteResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.Customer, typeof(ForbidResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task PostAccountTest(PriviledgeLevel privilegeLevel, Type expectedResponse)
         {
             int numberOfAccounts = await GetNumberOfAccounts();
 
@@ -217,7 +217,7 @@ namespace UnitTests.UnitTests.Services
                 UserName = "Test" + privilegeLevel.ToString(),
                 Password = "password",
                 PhoneNumber = "1234567890",
-                PrivilegeLevel = PrivilegeLevel.NotAssigned,
+                PrivilegeLevel = PriviledgeLevel.NotAssigned,
                 City = "City",
                 Address = "Address",
                 Email = "Email"
@@ -238,7 +238,7 @@ namespace UnitTests.UnitTests.Services
 
                 Assert.Equal(numberOfAccounts + 1, numberOfAccountsCheck);
 
-                var get = await _service.GetAccountById(newId, new UserData(0, PrivilegeLevel.Admin));
+                var get = await _service.GetAccountById(newId, new UserData(0, PriviledgeLevel.Admin));
                 Assert.True(get.Result is OkObjectResult || get.Value != null);
                 Assert.Equal(account.UserName, get.Value!.UserName);
             }
@@ -249,13 +249,13 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(Utility.Enums.PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.Customer, typeof(ForbidResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task DeleteAccountTest(PrivilegeLevel privilegeLevel, Type expectedResponse)
+        [InlineData(Utility.Enums.PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.Customer, typeof(ForbidResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task DeleteAccountTest(PriviledgeLevel privilegeLevel, Type expectedResponse)
         {
-            if (privilegeLevel == PrivilegeLevel.Admin)
+            if (privilegeLevel == PriviledgeLevel.Admin)
             {
                 //Test for not existing account
 
@@ -272,7 +272,7 @@ namespace UnitTests.UnitTests.Services
 
             int numberOfAccountsCheck = await GetNumberOfAccounts();
 
-            if (privilegeLevel == PrivilegeLevel.Admin)
+            if (privilegeLevel == PriviledgeLevel.Admin)
             {
                 Assert.True(numberOfAccounts > numberOfAccountsCheck);
             }
@@ -283,30 +283,30 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(Utility.Enums.PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.Customer, typeof(ForbidResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task SetPrivilegeLevelTest(PrivilegeLevel privilegeLevel, Type expectedResponse)
+        [InlineData(Utility.Enums.PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.Customer, typeof(ForbidResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task SetPrivilegeLevelTest(PriviledgeLevel privilegeLevel, Type expectedResponse)
         {
-            if (privilegeLevel == PrivilegeLevel.Admin)
+            if (privilegeLevel == PriviledgeLevel.Admin)
             {
                 //Test for not existing account
 
-                var nonExistincAccountResult = await _service.SetPrivilegeLevel(await GetNumberOfAccounts() + 100, PrivilegeLevel.NotAssigned, new UserData(0, privilegeLevel));
+                var nonExistincAccountResult = await _service.SetPrivilegeLevel(await GetNumberOfAccounts() + 100, PriviledgeLevel.NotAssigned, new UserData(0, privilegeLevel));
 
                 Assert.IsType<NotFoundResult>(nonExistincAccountResult);
             }
 
             int accountID = 1;
 
-            var temp1 = await _service.GetAccountById(accountID, new UserData(0, PrivilegeLevel.Admin));
+            var temp1 = await _service.GetAccountById(accountID, new UserData(0, PriviledgeLevel.Admin));
 
-            var result = await _service.SetPrivilegeLevel(accountID, PrivilegeLevel.NotAssigned, new UserData(0, privilegeLevel));
+            var result = await _service.SetPrivilegeLevel(accountID, PriviledgeLevel.NotAssigned, new UserData(0, privilegeLevel));
 
-            var temp2 = await _service.GetAccountById(accountID, new UserData(0, PrivilegeLevel.Admin));
+            var temp2 = await _service.GetAccountById(accountID, new UserData(0, PriviledgeLevel.Admin));
 
-            if (privilegeLevel == PrivilegeLevel.Admin)
+            if (privilegeLevel == PriviledgeLevel.Admin)
             {
                 Assert.IsType(expectedResponse, result);
                 Assert.True(temp1.Value.PrivilegeLevel != temp2.Value.PrivilegeLevel);

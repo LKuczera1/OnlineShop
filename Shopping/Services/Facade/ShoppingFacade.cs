@@ -48,7 +48,7 @@ namespace Shopping.Services.Facade
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
 
 
                     item = new ShoppingCartItemDto()
@@ -59,12 +59,12 @@ namespace Shopping.Services.Facade
                         Price = product.Price,
                     };
 
-                    var mockUser = new UserData(item.ClientId, PrivilegeLevel.Customer);
+                    var mockUser = new UserData(item.ClientId, PriviledgeLevel.Customer);
 
                     await _wishlistService.DeleteWishlistItem(itemId, mockUser);
 
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
 
                     item = new ShoppingCartItemDto()
                     {
@@ -87,7 +87,7 @@ namespace Shopping.Services.Facade
 
         public async Task<ActionResult> PlaceOrder(UserData userData)
         {
-            if (userData.clientId is null || userData.privilegeLevel != PrivilegeLevel.Customer) return new BadRequestResult();
+            if (userData.clientId is null || userData.privilegeLevel != PriviledgeLevel.Customer) return new BadRequestResult();
 
             var clientOrder = await _cartService.GetShoppingCartItemByClientId((int)userData.clientId, userData);
 
@@ -135,7 +135,7 @@ namespace Shopping.Services.Facade
             }
 
             if (order.Value.ClientId != (int)userData.clientId
-                && userData.privilegeLevel == PrivilegeLevel.Customer) return new BadRequestResult();
+                && userData.privilegeLevel == PriviledgeLevel.Customer) return new BadRequestResult();
 
             return order.Value.ToOrderStatus();
         }
@@ -150,8 +150,8 @@ namespace Shopping.Services.Facade
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
-                case PrivilegeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.Admin:
+                case PriviledgeLevel.SalesDepartmentWorker:
 
                     if (!IsOrderStatusInRange(status)) return new BadRequestObjectResult("Invalid order status.");
 

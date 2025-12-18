@@ -20,7 +20,7 @@ builder.Services.AddDbContext<ShoppingDbContext>(
 
 //Rejestracja pliku json
 builder.Configuration.AddJsonFile(
-    new PhysicalFileProvider(AppContext.BaseDirectory),
+    Utility.Common.Tools.GetPhysicalFileProviderToUtility(),
     "AppSettings/appsettings.json",
     optional: false,
     reloadOnChange: true);

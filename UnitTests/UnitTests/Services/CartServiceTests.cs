@@ -32,11 +32,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, 10)]
-        [InlineData(PrivilegeLevel.Customer, 4)]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, -1)] // Forbid
-        [InlineData(PrivilegeLevel.NotAssigned, -1)] // Forbid
-        public async Task GetShoppingCartItems_Test(PrivilegeLevel privilege, int expectedCountOrForbid)
+        [InlineData(PriviledgeLevel.Admin, 10)]
+        [InlineData(PriviledgeLevel.Customer, 4)]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, -1)] // Forbid
+        [InlineData(PriviledgeLevel.NotAssigned, -1)] // Forbid
+        public async Task GetShoppingCartItems_Test(PriviledgeLevel privilege, int expectedCountOrForbid)
         {
             var ud = new UserData(1, privilege);
             var res = await _service.GetShoppingCartItems(ud);
@@ -45,7 +45,7 @@ namespace UnitTests.UnitTests.Services
             {
                 Assert.True(res.Result is OkObjectResult || res.Value != null);
                 var list = (res.Result as OkObjectResult)?.Value as IEnumerable<ShoppingCartItemDto> ?? res.Value!;
-                if (privilege == PrivilegeLevel.Admin)
+                if (privilege == PriviledgeLevel.Admin)
                     Assert.Equal(expectedCountOrForbid, list.Count());
                 else
                     Assert.All(list, i => Assert.Equal(1, i.ClientId));
@@ -57,12 +57,12 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, 0, 1, true)]
-        [InlineData(PrivilegeLevel.Customer, 2, 1, true)]   // Customer - Owner
-        [InlineData(PrivilegeLevel.Customer, 2, 2, false)]  // Customer - Not Owner
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, 0, 1, false)]
-        [InlineData(PrivilegeLevel.NotAssigned, 0, 1, false)]
-        public async Task GetShoppingCartItemById_Permissions(PrivilegeLevel privilege, int clientId, int itemId, bool shouldBeOk)
+        [InlineData(PriviledgeLevel.Admin, 0, 1, true)]
+        [InlineData(PriviledgeLevel.Customer, 2, 1, true)]   // Customer - Owner
+        [InlineData(PriviledgeLevel.Customer, 2, 2, false)]  // Customer - Not Owner
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, 0, 1, false)]
+        [InlineData(PriviledgeLevel.NotAssigned, 0, 1, false)]
+        public async Task GetShoppingCartItemById_Permissions(PriviledgeLevel privilege, int clientId, int itemId, bool shouldBeOk)
         {
             var result = await _service.GetShoppingCartItemById(itemId, new UserData(clientId, privilege));
 
@@ -80,11 +80,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(CreatedAtRouteResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(CreatedAtRouteResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task PostShoppingCartItem_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(CreatedAtRouteResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(CreatedAtRouteResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task PostShoppingCartItem_Test(PriviledgeLevel privilege, Type expected)
         {
             var dto = new ShoppingCartItemDto
             {
@@ -99,11 +99,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task PutShoppingCartItem_Test(PrivilegeLevel privilege, Type expectedType)
+        [InlineData(PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task PutShoppingCartItem_Test(PriviledgeLevel privilege, Type expectedType)
         {
             int targetId = 4;
             var dto = new ShoppingCartItemDto { ClientId = 999, ProductId = 777, Quantity = 5, Price = 10.5 };
@@ -117,11 +117,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task DeleteShoppingCartItem_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task DeleteShoppingCartItem_Test(PriviledgeLevel privilege, Type expected)
         {
             var result = await _service.DeleteShoppingCartItem(4, new UserData(2, privilege));
             if (expected == typeof(NoContentResult))
@@ -133,12 +133,12 @@ namespace UnitTests.UnitTests.Services
         [Fact]
         public async Task DeleteShoppingCartItemsByClientId_Admin_NoContent()
         {
-            var before = await _service.GetShoppingCartItemByClientId(1, new UserData(1, PrivilegeLevel.Admin));
-            var result = await _service.DeleteShoppingCartItemsByClientId(1, new UserData(0, PrivilegeLevel.Admin));
+            var before = await _service.GetShoppingCartItemByClientId(1, new UserData(1, PriviledgeLevel.Admin));
+            var result = await _service.DeleteShoppingCartItemsByClientId(1, new UserData(0, PriviledgeLevel.Admin));
 
             Assert.IsType<NoContentResult>(result);
 
-            var after = await _service.GetShoppingCartItemByClientId(1, new UserData(1, PrivilegeLevel.Admin));
+            var after = await _service.GetShoppingCartItemByClientId(1, new UserData(1, PriviledgeLevel.Admin));
 
             var beforeCount = (before.Result as OkObjectResult)?.Value as List<ShoppingCartItemDto> ?? before.Value!;
             var afterCount = (after.Result as OkObjectResult)?.Value as List<ShoppingCartItemDto> ?? after.Value!;

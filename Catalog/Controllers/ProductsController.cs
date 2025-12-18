@@ -15,6 +15,17 @@ namespace Catalog.Controllers
     {
         private readonly CatalogServices _context;
 
+        //Picture image path str class
+        public class UpdateProductPicturePathRequest
+        {
+            public string NewPath { get; set; } = string.Empty;
+        }
+
+        public class UploadProductImageRequest
+        {
+            public IFormFile File { get; set; } = default!;
+        }
+
         public ProductsController(CatalogServices context)
         {
             _context = context;
@@ -22,13 +33,21 @@ namespace Catalog.Controllers
 
         // GET: api/Products
         [HttpGet]
+        [Authorize(Roles = RolesStr.Admin)]
         public async Task<IEnumerable<ProductDto>> GetProducts()
         {
             return await _context.GetProducts();
         }
 
+
+        [HttpGet("page/{page:int}", Name ="GetProductsPage")]
+        public async Task<IEnumerable<ProductDto>> GetProducts(int page)
+        {
+            return await _context.GetProducts(page);
+        }
+
         // GET: api/Products/5
-        [HttpGet("{id}", Name = "GetProductById")]
+        [HttpGet("{id:int}", Name = "GetProductById")]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
             return await _context.GetProductById(id);
@@ -66,6 +85,51 @@ namespace Catalog.Controllers
             return _context.Products.Any(e => e.Id == id);
         }
         */
+
+        //------------- CRUD controllers for image path
+
+        
+        [HttpGet("prPic/{id}")]
+        public async Task<ActionResult<String>> getProductPicturePath(int id)
+        {
+            return await _context.GetProductPath(id);
+        }
+
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
+        [HttpPost("prPic/{id:int}")]
+        public async Task<IActionResult> PostProductPicturePath(int id, [FromBody] UpdateProductPicturePathRequest req)
+        {
+            return await _context.PostProductPath(id, GetUserData(), req.NewPath);
+        }
+
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
+        [HttpDelete("prPic/{id}")]
+        public async Task<IActionResult> deleteProductPicturePath(int id)
+        {
+            return await _context.DeleteProductPath(id, GetUserData());
+        }
+
+        //------------- CRUD operations diretcly for pictures
+
+        [HttpGet("{id:int}/image")]
+        public async Task<IActionResult> GetProductImage(int id)
+        {
+            var file = await _context.GetProductImage(id);
+
+            if (file is null)
+                return NotFound();
+
+            return PhysicalFile(file.Value.Path, file.Value.ContentType);
+        }
+
+        [HttpPost("{productId:int}/image")]
+        [Consumes("multipart/form-data")]
+        [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
+        public async Task<IActionResult> UploadImage(int productId, [FromForm] UploadProductImageRequest req, CancellationToken ct)
+        {
+            return await _context.UploadProductImage(productId, GetUserData(), req.File, ct);
+        }
+
     }
 }
 

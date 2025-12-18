@@ -54,7 +54,7 @@ namespace Identity.Controllers
         // PUT: api/Accounts/5
         [HttpPut("setPrivilegeLevel/{id}/{privilegeLevel}")]
         [Authorize(Roles = RolesStr.Admin)]
-        public async Task<IActionResult> SetPrivilegeLevel(int id, PrivilegeLevel privilegeLevel)
+        public async Task<IActionResult> SetPrivilegeLevel(int id, PriviledgeLevel privilegeLevel)
         {
             return await _context.SetPrivilegeLevel(id, privilegeLevel, GetUserData());
         }

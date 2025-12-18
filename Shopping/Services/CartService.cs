@@ -24,10 +24,10 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     cartItemsList = await _context.Set<ShoppingCartItem>().ToListAsync();
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
                     cartItemsList = await _context.Set<ShoppingCartItem>()
                         .Where(c => c.ClientId.Equals(userData.clientId)).ToListAsync();
                     break;
@@ -46,10 +46,10 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     cartItem = await _context.Set<ShoppingCartItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
                     cartItem = await _context.Set<ShoppingCartItem>()
                         .Where(c => c.Id.Equals(id) && c.ClientId.Equals(userData.clientId)).SingleOrDefaultAsync();
                     break;
@@ -72,9 +72,9 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                 //Nothing to do here
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
                     if (ClientId != userData.clientId) return new UnauthorizedResult();
                     break;
                 default: return new ForbidResult();
@@ -97,10 +97,10 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     entity.FromDto(id, dto);
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
 
                     if (entity.ClientId != userData.clientId) return new UnauthorizedResult();
                     entity.FromDto(id, dto);
@@ -121,10 +121,10 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     entity = dto.ToEntity(0);
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
                     if (userData.clientId is null) return new ForbidResult();
 
                     entity = dto.ToEntity(0);
@@ -150,10 +150,10 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     //Nothing to do here
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
                     if (cartItem.ClientId != userData.clientId) return new BadRequestResult();
                     break;
                 default: return new ForbidResult();

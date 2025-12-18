@@ -60,11 +60,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(Utility.Enums.PrivilegeLevel.Admin, typeof(CreatedAtRouteResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.Customer, typeof(BadRequestResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.SalesDepartmentWorker, typeof(CreatedAtRouteResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.NotAssigned, typeof(BadRequestResult))]
-        public async Task ShouldAddNewProductToDb(PrivilegeLevel privilegeLevel, Type expectedResponseType)
+        [InlineData(Utility.Enums.PriviledgeLevel.Admin, typeof(CreatedAtRouteResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.Customer, typeof(BadRequestResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.SalesDepartmentWorker, typeof(CreatedAtRouteResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.NotAssigned, typeof(BadRequestResult))]
+        public async Task ShouldAddNewProductToDb(PriviledgeLevel privilegeLevel, Type expectedResponseType)
         {
             var newProduct = new Catalog.Dtos.ProductDto
             {
@@ -80,11 +80,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(Utility.Enums.PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.Customer, typeof(BadRequestResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.NotAssigned, typeof(BadRequestResult))]
-        public async Task ShouldUpdateProductData(PrivilegeLevel privilegeLevel, Type expectedResponseType)
+        [InlineData(Utility.Enums.PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.Customer, typeof(BadRequestResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.NotAssigned, typeof(BadRequestResult))]
+        public async Task ShouldUpdateProductData(PriviledgeLevel privilegeLevel, Type expectedResponseType)
         {
             var newProduct = new Catalog.Dtos.ProductDto
             {
@@ -113,11 +113,11 @@ namespace UnitTests.UnitTests.Services
 
 
         [Theory]
-        [InlineData(Utility.Enums.PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.Customer, typeof(BadRequestResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
-        [InlineData(Utility.Enums.PrivilegeLevel.NotAssigned, typeof(BadRequestResult))]
-        public async Task ShouldDeleteProduct(PrivilegeLevel privilegeLevel, Type expectedResponseType)
+        [InlineData(Utility.Enums.PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.Customer, typeof(BadRequestResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
+        [InlineData(Utility.Enums.PriviledgeLevel.NotAssigned, typeof(BadRequestResult))]
+        public async Task ShouldDeleteProduct(PriviledgeLevel privilegeLevel, Type expectedResponseType)
         {
             var temp = await GetNumberOfProducts();
             int numberOfProducts = temp.Value;

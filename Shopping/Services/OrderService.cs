@@ -26,10 +26,10 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     orderItemsList = await _context.Set<OrderedItem>().ToListAsync();
                     break;
-                case PrivilegeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.SalesDepartmentWorker:
 
                     if (orderId is null)
                     {
@@ -38,7 +38,7 @@ namespace Shopping.Services
                     orderItemsList = await _context.Set<OrderedItem>().Where(i => i.OrderId.Equals(orderId)).ToListAsync();
 
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
 
                     if (orderId is null)
                     {
@@ -69,12 +69,12 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
-                case PrivilegeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.Admin:
+                case PriviledgeLevel.SalesDepartmentWorker:
                     orderItem = await _context.Set<OrderedItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
 
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
 
                     if (orderId is null)
                     {
@@ -109,11 +109,11 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
 
                     entity.FromDto(id, dto);
                     break;
-                case PrivilegeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.SalesDepartmentWorker:
 
                     var temp = entity.OrderId;
                     entity.FromDto(id, dto);
@@ -132,7 +132,7 @@ namespace Shopping.Services
         //Post
         public async Task<ActionResult<OrderedItemDto>> PostOrderItem(OrderedItemDto dto, UserData? userData = null)
         {
-            if (userData.privilegeLevel != PrivilegeLevel.Admin) return new ForbidResult();
+            if (userData.privilegeLevel != PriviledgeLevel.Admin) return new ForbidResult();
 
             var entity = dto.ToEntity(0);
 
@@ -154,11 +154,11 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     break;
-                case PrivilegeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.SalesDepartmentWorker:
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
                     return new ForbidResult();
                     break;
                 default:
@@ -180,13 +180,13 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     ordersList = await _context.Set<Order>().ToListAsync();
                     break;
-                case PrivilegeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.SalesDepartmentWorker:
                     ordersList = await _context.Set<Order>().ToListAsync();
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
                     ordersList = await _context.Set<Order>().Where(p => p.ClientId.Equals(userData.clientId)).ToListAsync();
                     break;
                 default:
@@ -207,11 +207,11 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
-                case PrivilegeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.Admin:
+                case PriviledgeLevel.SalesDepartmentWorker:
                     order = await _context.Set<Order>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
                     order = await _context.Set<Order>().Where(c => c.Id.Equals(id) && c.ClientId.Equals(userData.clientId)).SingleOrDefaultAsync();
                     break;
                 default: return new ForbidResult();
@@ -232,8 +232,8 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
-                case PrivilegeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.Admin:
+                case PriviledgeLevel.SalesDepartmentWorker:
                     entity = await _context.Set<Order>().FindAsync([id]);
                     break;
                 default: return new ForbidResult();
@@ -257,8 +257,8 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
-                case PrivilegeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.Admin:
+                case PriviledgeLevel.SalesDepartmentWorker:
                     _context.Set<Order>().Add(entity);
                     await _context.SaveChangesAsync();
                     break;
@@ -280,11 +280,11 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
-                case PrivilegeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.Admin:
+                case PriviledgeLevel.SalesDepartmentWorker:
 
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
                     if (order.ClientId != userData.clientId) return new ForbidResult();
                     break;
                 default: return new ForbidResult();

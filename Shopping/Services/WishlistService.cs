@@ -24,10 +24,10 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     wishlistItemsList = await _context.Set<WishlistItem>().ToListAsync();
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
                     wishlistItemsList = await _context.Set<WishlistItem>()
                                                   .Where(w => w.ClientId == userData.clientId)
                                                   .ToListAsync();
@@ -48,10 +48,10 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     wishlistItem = await _context.Set<WishlistItem>().Where(c => c.Id.Equals(id)).SingleOrDefaultAsync();
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
                     if (userData.clientId is null) return new BadRequestResult();
                     wishlistItem = await _context.Set<WishlistItem>().Where(c =>
                     c.Id.Equals(id) && c.ClientId.Equals(userData.clientId)).SingleOrDefaultAsync();
@@ -78,12 +78,12 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
 
                     entity.FromDto(id, dto);
 
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
 
                     if (userData.clientId is null)
                         return new UnauthorizedResult();
@@ -112,12 +112,12 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
 
                     //Nothing to do here
 
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
 
                     if (userData.clientId is null)
                         return new UnauthorizedResult();
@@ -146,12 +146,12 @@ namespace Shopping.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
 
                     //Nothing to do here
 
                     break;
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.Customer:
 
                     if (userData.clientId is null)
                         return new UnauthorizedResult();

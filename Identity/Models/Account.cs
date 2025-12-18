@@ -23,7 +23,7 @@ namespace Identity.Models
         [Required]
         public string City { get; set; } = string.Empty;
         [Required]
-        public PrivilegeLevel PrivilegeLevel { get; set; } = PrivilegeLevel.NotAssigned;
+        public PriviledgeLevel PriviledgeLevel { get; set; } = PriviledgeLevel.NotAssigned;
 
         public AccountDto ToDto() => new AccountDto
         {
@@ -33,7 +33,7 @@ namespace Identity.Models
             PhoneNumber = PhoneNumber,
             Address = Address,
             City = City,
-            PrivilegeLevel = PrivilegeLevel
+            PriviledgeLevel = PriviledgeLevel
         };
 
         public void FromDto(int id, AccountDto dto)
@@ -45,7 +45,7 @@ namespace Identity.Models
             PhoneNumber = dto.PhoneNumber;
             Address = dto.Address;
             City = dto.City;
-            PrivilegeLevel = PrivilegeLevel;
+            PriviledgeLevel = PriviledgeLevel;
         }
     }
 }

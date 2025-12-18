@@ -12,8 +12,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<CatalogDbContext>(
     options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Catalog;Trusted_Connection=True;"));
 
-//Wstrzykiwanie serwisów
-builder.Services.AddScoped<CatalogServices>();
+
+var imagesPath = Path.GetFullPath(
+    Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Catalog","productsImages")
+);
+//Temporaly solution
+// imagesPath => D:\Programming\Projects\Visual Studio\OnlineShop\Catalog\productsImages
+
+if(imagesPath==null) 
+    imagesPath = "D:\\Programming\\Projects\\Visual Studio\\OnlineShop\\Catalog\\productsImages"; 
+
+//Wstrzykiwanie serwisów wraz z przekazaniem sciezki
+builder.Services.AddScoped<CatalogServices>(sp =>
+{
+    var db = sp.GetRequiredService<CatalogDbContext>();
+    return new CatalogServices(db, imagesPath);
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -48,7 +62,7 @@ builder.Services.AddSwaggerGen(c =>
 
 //Rejestracja pliku json
 builder.Configuration.AddJsonFile(
-    new PhysicalFileProvider(AppContext.BaseDirectory),
+    Utility.Common.Tools.GetPhysicalFileProviderToUtility(),
     "AppSettings/appsettings.json",
     optional: false,
     reloadOnChange: true);

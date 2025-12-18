@@ -1,6 +1,6 @@
 ﻿namespace Utility.Enums
 {
-    public enum PrivilegeLevel
+    public enum PriviledgeLevel
     {
         NotAssigned = 0,
         Admin = 1,
@@ -36,15 +36,15 @@
             return str;
         }
 
-        public static PrivilegeLevel RoleToEnum(string role)
+        public static PriviledgeLevel RoleToEnum(string role)
         {
             switch (role)
             {
-                case RolesStr.Admin: return PrivilegeLevel.Admin;
-                case RolesStr.Customer: return PrivilegeLevel.Customer;
-                case RolesStr.SalesDepartmentWorker: return PrivilegeLevel.SalesDepartmentWorker;
-                case RolesStr.NotAssigned: return PrivilegeLevel.NotAssigned;
-                default: return PrivilegeLevel.NotAssigned;
+                case RolesStr.Admin: return PriviledgeLevel.Admin;
+                case RolesStr.Customer: return PriviledgeLevel.Customer;
+                case RolesStr.SalesDepartmentWorker: return PriviledgeLevel.SalesDepartmentWorker;
+                case RolesStr.NotAssigned: return PriviledgeLevel.NotAssigned;
+                default: return PriviledgeLevel.NotAssigned;
             }
         }
     }

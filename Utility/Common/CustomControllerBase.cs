@@ -36,13 +36,13 @@ namespace Utility.Common
             return User.Claims.Where(r => r.Type == ClaimTypes.Role).Select(r => r.Value).First();
         }
 
-        protected PrivilegeLevel GetPrivilegeLevel()
+        protected PriviledgeLevel GetPrivilegeLevel()
         {
             var role = GetUserRole();
 
             if (role != null) return RolesStr.RoleToEnum(role);
 
-            return PrivilegeLevel.NotAssigned;
+            return PriviledgeLevel.NotAssigned;
         }
 
         protected UserData GetUserData()

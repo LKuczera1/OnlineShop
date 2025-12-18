@@ -40,9 +40,9 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin)]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker)]
-        public async Task GetOrders_AdminOrSales_ShouldReturnAll(PrivilegeLevel privilege)
+        [InlineData(PriviledgeLevel.Admin)]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker)]
+        public async Task GetOrders_AdminOrSales_ShouldReturnAll(PriviledgeLevel privilege)
         {
             var list = await _service.GetOrders(new UserData(0, privilege));
             Assert.NotNull(list);
@@ -50,10 +50,10 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Customer, 1)]
-        [InlineData(PrivilegeLevel.Customer, 2)]
-        [InlineData(PrivilegeLevel.Customer, 3)]
-        public async Task GetOrders_Customer_ShouldReturnOnlyOwn(PrivilegeLevel privilege, int clientId)
+        [InlineData(PriviledgeLevel.Customer, 1)]
+        [InlineData(PriviledgeLevel.Customer, 2)]
+        [InlineData(PriviledgeLevel.Customer, 3)]
+        public async Task GetOrders_Customer_ShouldReturnOnlyOwn(PriviledgeLevel privilege, int clientId)
         {
             var list = await _service.GetOrders(new UserData(clientId, privilege));
             Assert.NotNull(list);
@@ -61,11 +61,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(OkObjectResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(OkObjectResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(NotFoundResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task GetOrderById_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(OkObjectResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(OkObjectResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(NotFoundResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task GetOrderById_Test(PriviledgeLevel privilege, Type expected)
         {
             var any = _db.Set<Order>().AsQueryable().Select(o => o.Id).First();
 
@@ -78,11 +78,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(CreatedAtRouteResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(CreatedAtRouteResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(ForbidResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task PostOrder_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(CreatedAtRouteResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(CreatedAtRouteResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(ForbidResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task PostOrder_Test(PriviledgeLevel privilege, Type expected)
         {
             var nextOrderId = _db.Set<Order>().Max(o => o.OrderId) + 1;
             var dto = new OrderDto
@@ -99,11 +99,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(ForbidResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task PutOrder_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(ForbidResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task PutOrder_Test(PriviledgeLevel privilege, Type expected)
         {
             var entity = _db.Set<Order>().First();
             var dto = new OrderDto
@@ -121,11 +121,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(ForbidResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task DeleteOrder_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(ForbidResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task DeleteOrder_Test(PriviledgeLevel privilege, Type expected)
         {
             var id = _db.Set<Order>().Select(o => o.Id).First();
             var result = await _service.DeleteOrder(id, new UserData(0, privilege));
@@ -133,11 +133,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(CreatedAtRouteResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(ForbidResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task PostOrderItem_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(CreatedAtRouteResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(ForbidResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(ForbidResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task PostOrderItem_Test(PriviledgeLevel privilege, Type expected)
         {
             var order = _db.Set<Order>().First();
             var dto = new OrderedItemDto
@@ -153,11 +153,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(ForbidResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task PutOrderItem_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(ForbidResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task PutOrderItem_Test(PriviledgeLevel privilege, Type expected)
         {
             var item = _db.Set<OrderedItem>().First();
             var dto = new OrderedItemDto
@@ -173,11 +173,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(ForbidResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(ForbidResult))]
-        public async Task DeleteOrderItem_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(ForbidResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(ForbidResult))]
+        public async Task DeleteOrderItem_Test(PriviledgeLevel privilege, Type expected)
         {
             var itemId = _db.Set<OrderedItem>().Select(i => i.Id).First();
 

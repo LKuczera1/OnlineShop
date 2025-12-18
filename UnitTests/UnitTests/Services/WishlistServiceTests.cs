@@ -33,11 +33,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, 10)]
-        [InlineData(PrivilegeLevel.Customer, -1)]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, -2)]
-        [InlineData(PrivilegeLevel.NotAssigned, -2)]
-        public async Task GetWishlistItems_Test(PrivilegeLevel privilege, int expectedCountOrFlag)
+        [InlineData(PriviledgeLevel.Admin, 10)]
+        [InlineData(PriviledgeLevel.Customer, -1)]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, -2)]
+        [InlineData(PriviledgeLevel.NotAssigned, -2)]
+        public async Task GetWishlistItems_Test(PriviledgeLevel privilege, int expectedCountOrFlag)
         {
             var result = await _service.GetWishlistItems(new UserData(1, privilege));
 
@@ -58,10 +58,10 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(OkObjectResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(UnauthorizedResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(UnauthorizedResult))]
-        public async Task GetWishlistItemById_Basic_ByPrivilege(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(OkObjectResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(UnauthorizedResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(UnauthorizedResult))]
+        public async Task GetWishlistItemById_Basic_ByPrivilege(PriviledgeLevel privilege, Type expected)
         {
             var id = _db.Set<WishlistItem>().Select(w => w.Id).First();
             var result = await _service.GetWishlistItemById(id, new UserData(1, privilege));
@@ -80,7 +80,7 @@ namespace UnitTests.UnitTests.Services
         [Fact]
         public async Task GetWishlistItemById_Admin_NotFound()
         {
-            var result = await _service.GetWishlistItemById(9999, new UserData(1, PrivilegeLevel.Admin));
+            var result = await _service.GetWishlistItemById(9999, new UserData(1, PriviledgeLevel.Admin));
             Assert.IsType<NotFoundResult>(result.Result);
         }
 
@@ -88,7 +88,7 @@ namespace UnitTests.UnitTests.Services
         public async Task GetWishlistItemById_Customer_OwnVsForeign()
         {
             var itemId = _db.Set<WishlistItem>().Select(w => w.Id).First();
-            var item = await _service.GetWishlistItemById(itemId, new UserData(0, PrivilegeLevel.Admin));
+            var item = await _service.GetWishlistItemById(itemId, new UserData(0, PriviledgeLevel.Admin));
 
             Assert.NotNull(item.Value);
 
@@ -96,21 +96,21 @@ namespace UnitTests.UnitTests.Services
             var otherId = ownerId + 1;
 
             //test for item with user id
-            var own = await _service.GetWishlistItemById(itemId, new UserData(ownerId, PrivilegeLevel.Customer));
+            var own = await _service.GetWishlistItemById(itemId, new UserData(ownerId, PriviledgeLevel.Customer));
             Assert.True(own != null && own.Value != null);
 
             //test for foreign id
-            var foreign = await _service.GetWishlistItemById(itemId, new UserData(otherId, PrivilegeLevel.Customer));
+            var foreign = await _service.GetWishlistItemById(itemId, new UserData(otherId, PriviledgeLevel.Customer));
             Assert.IsType<NotFoundResult>(foreign.Result);
         }
 
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(CreatedAtRouteResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(CreatedAtRouteResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(UnauthorizedResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(UnauthorizedResult))]
-        public async Task PostWishlistItem_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(CreatedAtRouteResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(CreatedAtRouteResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(UnauthorizedResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(UnauthorizedResult))]
+        public async Task PostWishlistItem_Test(PriviledgeLevel privilege, Type expected)
         {
             var dto = new WishlistItemDto { ClientId = 999, ProductId = 555, Quantity = 2 };
             var result = await _service.PostWishlistItem(dto, new UserData(1, privilege));
@@ -118,11 +118,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(UnauthorizedResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(UnauthorizedResult))]
-        public async Task PutWishlistItem_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(UnauthorizedResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(UnauthorizedResult))]
+        public async Task PutWishlistItem_Test(PriviledgeLevel privilege, Type expected)
         {
             var item = _db.Set<WishlistItem>().First(w => w.ClientId == 1);
             var dto = new WishlistItemDto
@@ -137,11 +137,11 @@ namespace UnitTests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(PrivilegeLevel.Admin, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.Customer, typeof(NoContentResult))]
-        [InlineData(PrivilegeLevel.SalesDepartmentWorker, typeof(UnauthorizedResult))]
-        [InlineData(PrivilegeLevel.NotAssigned, typeof(UnauthorizedResult))]
-        public async Task DeleteWishlistItem_Test(PrivilegeLevel privilege, Type expected)
+        [InlineData(PriviledgeLevel.Admin, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.Customer, typeof(NoContentResult))]
+        [InlineData(PriviledgeLevel.SalesDepartmentWorker, typeof(UnauthorizedResult))]
+        [InlineData(PriviledgeLevel.NotAssigned, typeof(UnauthorizedResult))]
+        public async Task DeleteWishlistItem_Test(PriviledgeLevel privilege, Type expected)
         {
             var item = _db.Set<WishlistItem>().First(w => w.ClientId == 1);
             var result = await _service.DeleteWishlistItem(item.Id, new UserData(1, privilege));

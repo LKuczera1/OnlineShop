@@ -1,5 +1,6 @@
 ﻿using Catalog.Dtos;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using Utility.DtoEntity;
 
 namespace Catalog.Models
@@ -16,6 +17,8 @@ namespace Catalog.Models
         public double Price { get; set; }
         [Required]
         public double Stock { get; set; }
+        
+        public string? PicturePath { get; set; }
 
         public ProductDto ToDto() => new ProductDto
         {
@@ -23,6 +26,7 @@ namespace Catalog.Models
             Description = Description,
             Price = Price,
             Stock = Stock,
+            PicturePath = PicturePath
         };
 
         public void FromDto(int id, ProductDto dto)
@@ -32,6 +36,7 @@ namespace Catalog.Models
             Description = dto.Description;
             Price = dto.Price;
             Stock = dto.Stock;
+            PicturePath = dto.PicturePath;
         }
     }
 }

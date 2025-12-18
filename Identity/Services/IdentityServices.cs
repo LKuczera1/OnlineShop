@@ -49,11 +49,11 @@ namespace Identity.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     return account.ToDto();
                     break;
-                case PrivilegeLevel.SalesDepartmentWorker:
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.Customer:
                     if (account.Id != userData.clientId) return new ForbidResult();
 
                     return account.ToDto();
@@ -72,11 +72,11 @@ namespace Identity.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     entity.FromDto(id, dto);
                     break;
-                case PrivilegeLevel.SalesDepartmentWorker:
-                case PrivilegeLevel.Customer:
+                case PriviledgeLevel.SalesDepartmentWorker:
+                case PriviledgeLevel.Customer:
                     if (entity.Id != userData.clientId) return new ForbidResult();
 
                     entity.FromDto(id, dto);
@@ -101,7 +101,7 @@ namespace Identity.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     _context.Set<Account>().Add(entity);
                     await _context.SaveChangesAsync();
                     break;
@@ -122,7 +122,7 @@ namespace Identity.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
+                case PriviledgeLevel.Admin:
                     _context.UserAccounts.Remove(account);
                     await _context.SaveChangesAsync();
                     break;
@@ -132,7 +132,7 @@ namespace Identity.Services
             return new NoContentResult();
         }
 
-        public async Task<IActionResult> SetPrivilegeLevel(int id, PrivilegeLevel privilegeLevel, UserData userData)
+        public async Task<IActionResult> SetPrivilegeLevel(int id, PriviledgeLevel privilegeLevel, UserData userData)
         {
             var entity = await _context.Set<Account>().FindAsync([id]);
             if (entity is null)
@@ -140,8 +140,8 @@ namespace Identity.Services
 
             switch (userData.privilegeLevel)
             {
-                case PrivilegeLevel.Admin:
-                    entity.PrivilegeLevel = privilegeLevel;
+                case PriviledgeLevel.Admin:
+                    entity.PriviledgeLevel = privilegeLevel;
 
                     await _context.SaveChangesAsync();
                     break;
@@ -160,7 +160,7 @@ namespace Identity.Services
 
             if (VerifyPassword(loginRequest, entity.ToDto()) == PasswordVerificationResult.Success)
             {
-                var JWTtoken = _jwtService.GenerateToken(entity.Id, entity.UserName, entity.PrivilegeLevel.ToString());
+                var JWTtoken = _jwtService.GenerateToken(entity.Id, entity.UserName, entity.PriviledgeLevel.ToString());
 
                 return new OkObjectResult(new AuthResponseDto
                 {
@@ -168,7 +168,7 @@ namespace Identity.Services
                     ExpiresAt = DateTime.UtcNow.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]!)),
                     UserId = entity.Id,
                     UserName = entity.UserName,
-                    PrivilegeLevel = entity.PrivilegeLevel
+                    PrivilegeLevel = entity.PriviledgeLevel
                 });
             }
             else
@@ -196,7 +196,7 @@ namespace Identity.Services
                 return new BadRequestObjectResult("Account with this username already exists.");
             }
 
-            account.PrivilegeLevel = PrivilegeLevel.Customer;
+            account.PriviledgeLevel = PriviledgeLevel.Customer;
 
             account.Password = HashPassword(account);
 
