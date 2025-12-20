@@ -39,6 +39,12 @@ namespace Catalog.Controllers
             return await _context.GetProducts();
         }
 
+        [HttpGet("numberOfProducts")]
+        public async Task<ActionResult<int>> GetNumberOfProducts()
+        {
+            return await _context.GetNumberOfProducts();
+        }
+
 
         [HttpGet("page/{page:int}", Name ="GetProductsPage")]
         public async Task<IEnumerable<ProductDto>> GetProducts(int page)

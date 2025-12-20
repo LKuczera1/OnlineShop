@@ -27,6 +27,11 @@ namespace Catalog.Services
             return products;
         }
 
+        public async Task<ActionResult<int>> GetNumberOfProducts()
+        {
+            return _context.Products.Count();
+        }
+
         public async Task<IEnumerable<ProductDto>> GetProducts(int page)
         {
             const int pageSize = 20;
