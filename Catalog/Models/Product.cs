@@ -22,6 +22,7 @@ namespace Catalog.Models
 
         public ProductDto ToDto() => new ProductDto
         {
+            Id = Id,
             Name = Name,
             Description = Description,
             Price = Price,
