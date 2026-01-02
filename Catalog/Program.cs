@@ -8,6 +8,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Note: To enable listening on ip addres not just only localport insert 0.0.0.0:port
+//instead of: localhost:port
+
 // Add services to the container.
 builder.Services.AddDbContext<CatalogDbContext>(
     options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Catalog;Trusted_Connection=True;"));
