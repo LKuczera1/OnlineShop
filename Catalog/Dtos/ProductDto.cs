@@ -10,7 +10,8 @@ namespace Catalog.Dtos
         public string Description { get; set; }
         public double Price { get; set; }
         public double Stock { get; set; }
-        public string? PicturePath { get; set; }
+        public string? PictureName { get; set; } = string.Empty;
+        public string? ThumbnailName { get; set; } = string.Empty;
 
         public Product ToEntity(int id) => new Product
         {
@@ -19,7 +20,8 @@ namespace Catalog.Dtos
             Description = Description,
             Price = Price,
             Stock = Stock,
-            PicturePath = PicturePath
+            PictureName = PictureName,
+            ThumbnailName = ThumbnailName
         };
     }
 }

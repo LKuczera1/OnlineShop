@@ -17,8 +17,11 @@ namespace Catalog.Models
         public double Price { get; set; }
         [Required]
         public double Stock { get; set; }
-        
-        public string? PicturePath { get; set; }
+        [AllowNull]
+        public string? PictureName { get; set; } = string.Empty;
+
+        [AllowNull]
+        public string? ThumbnailName { get; set; } = string.Empty;
 
         public ProductDto ToDto() => new ProductDto
         {
@@ -27,7 +30,8 @@ namespace Catalog.Models
             Description = Description,
             Price = Price,
             Stock = Stock,
-            PicturePath = PicturePath
+            PictureName = PictureName,
+            ThumbnailName = ThumbnailName
         };
 
         public void FromDto(int id, ProductDto dto)
@@ -37,7 +41,8 @@ namespace Catalog.Models
             Description = dto.Description;
             Price = dto.Price;
             Stock = dto.Stock;
-            PicturePath = dto.PicturePath;
+            PictureName = dto.PictureName;
+            ThumbnailName = dto.ThumbnailName;
         }
     }
 }

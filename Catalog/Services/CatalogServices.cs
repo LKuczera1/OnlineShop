@@ -94,6 +94,9 @@ namespace Catalog.Services
                 case Utility.Enums.PriviledgeLevel.Admin:
                 case Utility.Enums.PriviledgeLevel.SalesDepartmentWorker:
 
+                    dto.PictureName = null;
+                    dto.ThumbnailName = null;
+
                     var entity = dto.ToEntity(0);
 
                     _context.Set<Product>().Add(entity);
@@ -136,12 +139,12 @@ namespace Catalog.Services
         {
             var product = await _context.Set<Product>().Where(c => c.Id.Equals(productId)).SingleOrDefaultAsync();
 
-            if (product == null || product.PicturePath == null)
+            if (product == null || product.PictureName == null)
             {
                 return new NotFoundResult();
             }
 
-            return product.PicturePath;
+            return product.PictureName;
         }
 
         //update
@@ -156,7 +159,7 @@ namespace Catalog.Services
                     if (entity is null)
                         return new NotFoundResult();
 
-                    entity.PicturePath = productPath;
+                    entity.PictureName = productPath;
 
                     //_context.Entry(entity).State = EntityState.Modified;
 
@@ -206,6 +209,9 @@ namespace Catalog.Services
                     {
                         await file.CopyToAsync(stream, ct);
                     }
+
+                    var thumbnailPath = ImageProcessing.GetThumbnailPath(fullPath, 80, 80);
+                    await ImageProcessing.CreateCenterCroppedThumbnailAsync(file, thumbnailPath, 80, 80, ct);
 
                     await PostProductPath(productId, new UserData(null, Utility.Enums.PriviledgeLevel.Admin), fullPath);
 
