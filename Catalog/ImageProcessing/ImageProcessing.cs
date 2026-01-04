@@ -11,7 +11,7 @@ public static class ImageProcessing
         var name = Path.GetFileNameWithoutExtension(originalFullPath);
         var ext = Path.GetExtension(originalFullPath);
 
-        return Path.Combine(dir,"thumbnails", $"{name}_thumb_{width}x{height}{ext}");
+        return Path.Combine(dir,"thumbnails", $"{name}_thumb_{width}x{height}{DateTime.Now.Minute}{ext}");
     }
 
     public static async Task CreateCenterCroppedThumbnailAsync(
@@ -67,7 +67,15 @@ public static class ImageProcessing
             System.IO.Directory.CreateDirectory(outDir);
 
         var format = GetImageFormatByExtension(System.IO.Path.GetExtension(thumbnailFullPath));
-        dest.Save(thumbnailFullPath, format);
+
+        try
+        {
+            dest.Save(thumbnailFullPath, format);
+        }
+        catch (Exception ex)
+        {
+
+        }
     }
 
     private static ImageFormat GetImageFormatByExtension(string? ext)

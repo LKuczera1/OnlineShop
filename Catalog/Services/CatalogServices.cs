@@ -11,6 +11,8 @@ namespace Catalog.Services
     {
         private readonly CatalogDbContext _context;
         private readonly string _picturesPath;
+
+        private readonly int[] _thumbnailResolution = [100,100]; //Resolution [x,y]
         public CatalogServices(CatalogDbContext context, string picturesPath)
         {
             _context = context;
@@ -77,7 +79,7 @@ namespace Catalog.Services
                     entity.FromDto(id, dto);
 
                     //_context.Entry(entity).State = EntityState.Modified;
-
+                    
                     await _context.SaveChangesAsync();
                     return new NoContentResult();
                     break;
@@ -135,7 +137,7 @@ namespace Catalog.Services
 
         //--------------Products pictures CRUD operations
 
-        public async Task<ActionResult<String>> GetProductPath(int productId)
+        public async Task<ActionResult<String?>> GetProductPicturePath(int productId)
         {
             var product = await _context.Set<Product>().Where(c => c.Id.Equals(productId)).SingleOrDefaultAsync();
 
@@ -146,9 +148,20 @@ namespace Catalog.Services
 
             return product.PictureName;
         }
+        public async Task<ActionResult<String?>> GetProductThumbnailPath(int productId)
+        {
+            var product = await _context.Set<Product>().Where(c => c.Id.Equals(productId)).SingleOrDefaultAsync();
+
+            if (product == null || product.PictureName == null)
+            {
+                return new NotFoundResult();
+            }
+
+            return product.ThumbnailName;
+        }
 
         //update
-        public async Task<ActionResult> PostProductPath(int productId, UserData userData, String productPath)
+        public async Task<ActionResult> PostProductPath(int productId, UserData userData, String productPath, String thumbnailPath)
         {
             switch (userData.privilegeLevel)
             {
@@ -159,7 +172,9 @@ namespace Catalog.Services
                     if (entity is null)
                         return new NotFoundResult();
 
+                    //Name conflict - Those are pathes to picture 
                     entity.PictureName = productPath;
+                    entity.ThumbnailName = thumbnailPath;
 
                     //_context.Entry(entity).State = EntityState.Modified;
 
@@ -173,14 +188,25 @@ namespace Catalog.Services
 
         public async Task<ActionResult> DeleteProductPath(int productId, UserData userData)
         {
-            return await PostProductPath(productId, userData, null);
+            return await PostProductPath(productId, userData, null, null);
         }
 
         //------------- image services methods....
 
         public async Task<(string Path, string ContentType)?> GetProductImage(int id)
         {
-            var path = (await GetProductPath(id)).Value;
+            var path = (await GetProductPicturePath(id)).Value;
+
+            if (path == null || !System.IO.File.Exists(path))
+                return null;
+
+            //Temp solution
+            return (path, "application/octet-stream"); 
+        }
+
+        public async Task<(string Path, string ContentType)?> GetProductThumbnail(int id)
+        {
+            var path = (await GetProductThumbnailPath(id)).Value;
 
             if (path == null || !System.IO.File.Exists(path))
                 return null;
@@ -210,10 +236,13 @@ namespace Catalog.Services
                         await file.CopyToAsync(stream, ct);
                     }
 
-                    var thumbnailPath = ImageProcessing.GetThumbnailPath(fullPath, 80, 80);
-                    await ImageProcessing.CreateCenterCroppedThumbnailAsync(file, thumbnailPath, 80, 80, ct);
+                    //Creating product thumbnail
 
-                    await PostProductPath(productId, new UserData(null, Utility.Enums.PriviledgeLevel.Admin), fullPath);
+
+                    var thumbnailPath = ImageProcessing.GetThumbnailPath(fullPath, _thumbnailResolution[0], _thumbnailResolution[1]);
+                    await ImageProcessing.CreateCenterCroppedThumbnailAsync(file, thumbnailPath, _thumbnailResolution[0], _thumbnailResolution[1], ct);
+
+                    await PostProductPath(productId, new UserData(null, Utility.Enums.PriviledgeLevel.Admin), fullPath, thumbnailPath);
 
                     return new OkResult();
 

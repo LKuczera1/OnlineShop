@@ -98,14 +98,15 @@ namespace Catalog.Controllers
         [HttpGet("prPic/{id}")]
         public async Task<ActionResult<String>> getProductPicturePath(int id)
         {
-            return await _context.GetProductPath(id);
+            return await _context.GetProductPicturePath(id);
         }
 
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
         [HttpPost("prPic/{id:int}")]
         public async Task<IActionResult> PostProductPicturePath(int id, [FromBody] UpdateProductPicturePathRequest req)
         {
-            return await _context.PostProductPath(id, GetUserData(), req.NewPath);
+            //This method is temporally "broken" and should not be used because it's deleting thumbnail path
+            return await _context.PostProductPath(id, GetUserData(), req.NewPath, null);
         }
 
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker)]
@@ -117,10 +118,21 @@ namespace Catalog.Controllers
 
         //------------- CRUD operations diretcly for pictures
 
-        [HttpGet("{id:int}/image")]
+        [HttpGet("image/{id:int}")]
         public async Task<IActionResult> GetProductImage(int id)
         {
             var file = await _context.GetProductImage(id);
+
+            if (file is null)
+                return NotFound();
+
+            return PhysicalFile(file.Value.Path, file.Value.ContentType);
+        }
+
+        [HttpGet("thumbnail/{id:int}")]
+        public async Task<IActionResult> GetProductThumbnail(int id)
+        {
+            var file = await _context.GetProductThumbnail(id);
 
             if (file is null)
                 return NotFound();
