@@ -81,6 +81,13 @@ namespace Identity.Controllers
             return await _context.Register(account);
         }
 
+        [HttpPost("login/refresh")]
+        [Authorize]
+        public async Task<IActionResult> Refresh(RefreshRequestDto request)
+        {
+            return await _context.Refresh(request, GetUserData());
+        }
+
         // DELETE: api/Accounts/5
         [HttpDelete("{id}")]
         [Authorize(Roles = RolesStr.Admin)]

@@ -4,6 +4,7 @@ using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Utility.Common;
 using Utility.DtoEntity;
 using Utility.Enums;
@@ -204,6 +205,41 @@ namespace Identity.Services
             await _context.SaveChangesAsync();
 
             return new OkObjectResult("Account was succesfully created");
+        }
+        public async Task<IActionResult> Refresh(RefreshRequestDto request, UserData userData)
+        {
+            var userName = request.Username;
+            var userId = userData.clientId;
+
+
+            //Walidation
+            if (string.IsNullOrWhiteSpace(userName))
+                return new UnauthorizedObjectResult("Missing username claim");
+
+            var entity = await _context.UserAccounts
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (entity == null)
+            {
+                return new NotFoundObjectResult("Account not found");
+            }
+            else if(entity.Id != userId)
+            {
+                return new UnauthorizedObjectResult("User id does not match your request data");
+            }
+            else
+            {
+                var jwtToken = _jwtService.GenerateToken(entity.Id, entity.UserName, entity.PriviledgeLevel.ToString());
+
+                return new OkObjectResult(new AuthResponseDto
+                {
+                    Token = jwtToken,
+                    ExpiresAt = DateTime.UtcNow.AddMinutes(double.Parse(_config["Jwt:ExpireMinutes"]!)),
+                    UserId = entity.Id,
+                    UserName = entity.UserName,
+                    PrivilegeLevel = entity.PriviledgeLevel
+                });
+            }
         }
 
         private string HashPassword(AccountDto account)
