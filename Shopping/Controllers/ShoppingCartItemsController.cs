@@ -60,6 +60,13 @@ namespace Shopping.Controllers
             return await _context.PostShoppingCartItem(shoppingCartItem, GetUserData());
         }
 
+        [HttpPost("{productId}/{quantity}")]
+        [Authorize(Roles = RolesStr.Admin_Customer)]
+        public async Task<ActionResult<ShoppingCartItemDto>> PostShoppingCartItem(int productId, int quantity)
+        {
+            return await _context.PostShoppingCartItem(productId, quantity, GetUserData());
+        }
+
         // DELETE: api/ShoppingCartItems/5
         [HttpDelete("{id}")]
         [Authorize(Roles = RolesStr.Admin_Customer)]

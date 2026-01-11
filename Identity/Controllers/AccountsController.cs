@@ -100,6 +100,11 @@ namespace Identity.Controllers
         private bool AccountExists(int id)
         {
             return _context.UserAccounts.Any(e => e.Id == id);
+            
+            
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //
+            // _context.Save....().AsNoTracking() <- Poczytać bo podobno bardzo przyśpiesza odczyt z bazy
         }
         */
     }

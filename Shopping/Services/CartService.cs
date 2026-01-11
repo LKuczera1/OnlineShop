@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shopping.Dtos;
 using Shopping.Models;
+using Shopping.Resolvers;
 using Utility.Common;
 using Utility.DtoEntity;
 using Utility.Enums;
@@ -11,10 +12,12 @@ namespace Shopping.Services
     public class CartService
     {
         private readonly ShoppingDbContext _context;
+        private readonly CatalogResolver _catalogResolver;
 
-        public CartService(ShoppingDbContext context)
+        public CartService(ShoppingDbContext context, CatalogResolver catalogResolver)
         {
             _context = context;
+            _catalogResolver = catalogResolver;
         }
 
         //Get
@@ -126,9 +129,39 @@ namespace Shopping.Services
                     break;
                 case PriviledgeLevel.Customer:
                     if (userData.clientId is null) return new ForbidResult();
-
                     entity = dto.ToEntity(0);
                     dto.ClientId = (int)userData.clientId;
+                    break;
+                default: return new ForbidResult();
+            }
+
+            _context.Set<ShoppingCartItem>().Add(entity);
+            await _context.SaveChangesAsync();
+
+            return new CreatedAtRouteResult(nameof(GetShoppingCartItemById), new { id = entity.Id }, entity);
+        }
+
+
+        public async Task<ActionResult<ShoppingCartItemDto>> PostShoppingCartItem(int prodId, double quantity, UserData userData)
+        {
+            ShoppingCartItem entity;
+
+            switch (userData.privilegeLevel)
+            {
+                case PriviledgeLevel.Admin:
+                case PriviledgeLevel.Customer:
+                    if (userData.clientId is null) return new ForbidResult();
+
+                    var resolvedProduct = await _catalogResolver.ResolveForProduct(prodId);
+
+                    if (resolvedProduct == null) return new BadRequestResult();
+
+                    entity = new ShoppingCartItem();
+
+                    entity.Price = resolvedProduct.Price;
+                    entity.ProductId = prodId;
+                    entity.Quantity = quantity;
+                    entity.ClientId = (int)userData.clientId;
                     break;
                 default: return new ForbidResult();
             }

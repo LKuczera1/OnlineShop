@@ -12,12 +12,12 @@ namespace Shopping.Resolvers
             _httpClient = httpClient;
 
             //Temporarily hardcoded
-            baseurl = "https://localhost:7001/api/";
+            baseurl = "https://localhost:7001/api";
         }
 
         public async Task<Catalog.Dtos.ProductDto> ResolveForProduct(int productId)
         {
-            var url = baseurl + $"{productId}";
+            var url = baseurl + $"/Products/{productId}";
 
             try
             {
