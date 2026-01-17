@@ -18,3 +18,7 @@ i stanowi przykład implementacji nowoczesnych aplikacji e-commerce w technologi
 - **Komplet testów jednostkowych** dla każdego z serwisów.
 
 Obecna wersja projektu to: 1.3
+
+## Project status
+This is a working prototype developed as part of my learning process.
+Future improvements may include code refactoring, architectural cleanup and better separation of concerns.
