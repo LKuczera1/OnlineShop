@@ -67,13 +67,6 @@ namespace Shopping.Controllers
         {
             return await _context.DeleteOrderItem(id);
         }
-
-        /*
-        private bool OrderedItemExists(int id)
-        {
-            return _context.OrderedItems.Any(e => e.Id == id);
-        }
-        */
     }
 }
 

@@ -11,11 +11,6 @@ namespace Utility.Common
 {
     public class CustomControllerBase : ControllerBase
     {
-        //public class UserData
-        //{
-        //    public int? ClientId { get; set; }
-        //    public PrivilegeLevel PrivilegeLevel { get; set; }
-        //}
 
         protected int? GetUserId()
         {
@@ -49,11 +44,6 @@ namespace Utility.Common
         {
             return new UserData(GetUserId(), GetPrivilegeLevel());
         }
-
-        //protected UserData GetUserData()
-        //{
-        //    return new UserData() { ClientId = GetUserId(), PrivilegeLevel = GetPrivilegeLevel() };
-        //}
     }
 }
 

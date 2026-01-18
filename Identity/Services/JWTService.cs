@@ -14,9 +14,6 @@ namespace Identity.Services
         public JWTService(IConfiguration config)
         {
             _config = config;
-
-            //Already implemented in Utility.appsettings.json
-            //_config["Jwt:ExpireMinutes"] = TokenExpirationTimeInMinutes.ToString();
         }
 
         public string GenerateToken(int userId, string userName, string privilegeLevel)

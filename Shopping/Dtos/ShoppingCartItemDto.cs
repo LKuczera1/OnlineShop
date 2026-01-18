@@ -5,6 +5,7 @@ namespace Shopping.Dtos
 {
     public class ShoppingCartItemDto : IDto<ShoppingCartItem>
     {
+        public int? Id { get; set; } = null;
         public int ClientId { get; set; }
         public int ProductId { get; set; }
         public double Quantity { get; set; }

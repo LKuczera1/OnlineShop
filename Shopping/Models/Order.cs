@@ -42,7 +42,7 @@ namespace Shopping.Models
         public void FromDto(int id, OrderDto dto)
         {
             Id = id;
-            OrderId = dto.OrderId;
+            OrderId = id;
             ClientId = dto.ClientId;
             Status = dto.Status;
             TotalPrice = dto.TotalPrice;

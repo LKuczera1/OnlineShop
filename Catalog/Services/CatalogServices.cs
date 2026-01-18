@@ -78,7 +78,6 @@ namespace Catalog.Services
 
                     entity.FromDto(id, dto);
 
-                    //_context.Entry(entity).State = EntityState.Modified;
                     
                     await _context.SaveChangesAsync();
                     return new NoContentResult();
@@ -172,11 +171,9 @@ namespace Catalog.Services
                     if (entity is null)
                         return new NotFoundResult();
 
-                    //Name conflict - Those are pathes to picture 
                     entity.PictureName = productPath;
                     entity.ThumbnailName = thumbnailPath;
 
-                    //_context.Entry(entity).State = EntityState.Modified;
 
                     await _context.SaveChangesAsync();
                     return new NoContentResult();
@@ -250,21 +247,6 @@ namespace Catalog.Services
                     return new ForbidResult();
             }
         }
-
-        /*
-         To be honest image involved features are total mess and was quickly written just to be able
-        to get product image to mobile app
-        Main detected problems: 
-        -When posting new pic or changing path old pic is not deleted
-        -because of using "application/octet-stream" as file type end user gets file without extensions
-         so we always have to assume that file extension is .jpg. AND THAT IS VERY IMPORTANT. WE HAVE TO
-         KEEP THIS FORMAT WHILE UPLOADING AND DOWNLOADING. There is no problem with uploading but format is stored
-         properly but we have no option (Quick option, there are always options...) to get file extension.
-         or we have... While getting file path we also get file extension. And with this we can determine file extension.
-         but this is temp solution...
-         
-         
-         */
     }
 }
 

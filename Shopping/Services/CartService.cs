@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Dtos;
+using Shopping.Enums;
 using Shopping.Models;
 using Shopping.Resolvers;
+using Shopping.Services.Facade;
 using Utility.Common;
 using Utility.DtoEntity;
 using Utility.Enums;
@@ -13,11 +15,13 @@ namespace Shopping.Services
     {
         private readonly ShoppingDbContext _context;
         private readonly CatalogResolver _catalogResolver;
+        private readonly OrderService _orderService;
 
-        public CartService(ShoppingDbContext context, CatalogResolver catalogResolver)
+        public CartService(ShoppingDbContext context, CatalogResolver catalogResolver, OrderService orderService)
         {
             _context = context;
             _catalogResolver = catalogResolver;
+            _orderService = orderService;
         }
 
         //Get
@@ -195,7 +199,7 @@ namespace Shopping.Services
             _context.ShoppingCartItems.Remove(cartItem);
             await _context.SaveChangesAsync();
 
-            return new NoContentResult();
+            return new OkResult();
         }
 
         //Delete by clientId | For this moment used only by Facade.Resolver 
@@ -214,6 +218,93 @@ namespace Shopping.Services
             }
 
             return new NoContentResult();
+        }
+
+        public async Task<IActionResult> PlaceOrder(List<SetOrderDto> items, UserData userData)
+        {
+            if(items.Count == 0) return new BadRequestResult();
+
+            switch (userData.privilegeLevel)
+            {
+                case PriviledgeLevel.Admin:
+                case PriviledgeLevel.Customer:
+
+
+                    var cartItems = await _context.Set<ShoppingCartItem>().Where(c => c.ClientId.Equals(userData.clientId)).ToListAsync();
+
+                    if(cartItems == null) return new BadRequestResult();
+                    if(cartItems.Count != items.Count) return new BadRequestResult();
+
+                    while(items.Count > 0) 
+                    {
+                        var searchResult = cartItems.Find(c => c.Id.Equals(items[0].Id));
+                        if (searchResult == null) return new BadRequestResult();
+
+                        searchResult.Quantity = items[0].Quantity;
+
+                        items.RemoveAt(0);
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    return await PlaceOrder(userData);
+
+                    break;
+                default: return new ForbidResult();
+            }
+        }
+
+        private async Task<ActionResult> PlaceOrder(UserData userData)
+        {
+            if (userData.clientId is null) return new BadRequestResult();
+
+            var clientOrder = await GetShoppingCartItemByClientId((int)userData.clientId, userData);
+
+            if (clientOrder.Result is NotFoundObjectResult || clientOrder.Value is null)
+            {
+                return new BadRequestResult();
+            }
+
+            double totalValue = 0;
+
+            foreach (var item in clientOrder.Value)
+            {
+                totalValue += item.Price;
+            }
+
+            var order = new OrderDto();
+            order.ClientId = (int)userData.clientId;
+            order.OrderTime = DateTime.Now;
+            order.Status = OrderStatus.Paid;
+            order.TotalPrice = totalValue;
+
+
+            //Temporary workaround for permissions issue
+            var result = await _orderService.PostOrder(order, new UserData(userData.clientId, PriviledgeLevel.Admin));
+
+            int orderId = 0;
+
+
+
+            if (result.Result is CreatedAtRouteResult created && created.Value is Shopping.Models.Order entity)
+            {
+                orderId = entity.Id;
+            }
+            else
+            {
+                return new BadRequestObjectResult("Nie udało się pobrać ID zamówienia.");
+            }
+
+            foreach (var item in clientOrder.Value)
+            {
+                await _orderService.PostOrderItem(item.ToOrderedItemDto(orderId), userData);
+            }
+
+            var finalResult = await DeleteShoppingCartItemsByClientId((int)userData.clientId, userData);
+
+            if (finalResult is NotFoundResult) return new OkObjectResult("An unexpected error probably happend.");
+
+            return new OkResult();
         }
     }
 }

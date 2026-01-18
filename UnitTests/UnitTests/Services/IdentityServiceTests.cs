@@ -191,15 +191,8 @@ namespace UnitTests.UnitTests.Services
 
             var changedAccount = await _service.GetAccountById(accountId, new UserData(accountId, PriviledgeLevel.Admin));
 
-            //Test to make sure database account data has changed
             Assert.True(changedAccount.Value.UserName == account.Value.UserName);
 
-            //If anybody is reading this...
-            //To be honest, those unit tests are getting more and more complicated.
-            //Im trying to cover every scenario, but there are more and more of them and im not enough experienced
-            //to write readable code with xUnit. For sure there are more effective methods, but I don't know them exactly....
-            //So...
-            //"I know that I know nothing" ~ Socrates...
         }
 
 

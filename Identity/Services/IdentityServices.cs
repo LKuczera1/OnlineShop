@@ -88,9 +88,6 @@ namespace Identity.Services
 
             entity.FromDto(id, dto);
 
-            //_context.Entry(entity).State = EntityState.Modified;
-            //Zakomentowane aby API nie zwracalo bledu 500
-
             await _context.SaveChangesAsync();
             return new NoContentResult();
         }

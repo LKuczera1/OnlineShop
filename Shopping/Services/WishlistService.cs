@@ -99,8 +99,6 @@ namespace Shopping.Services
                     return new UnauthorizedResult();
             }
 
-            //_context.Entry(entity).State = EntityState.Modified;
-
             await _context.SaveChangesAsync();
             return new NoContentResult();
         }

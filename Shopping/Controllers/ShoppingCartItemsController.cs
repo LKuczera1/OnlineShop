@@ -42,6 +42,14 @@ namespace Shopping.Controllers
             return await _context.GetShoppingCartItemById(id, GetUserData());
         }
 
+        // GET: api/ShoppingCartItems/5
+        [HttpPost("PlaceOrder")]
+        [Authorize(Roles = RolesStr.Admin_Customer)]
+        public async Task<IActionResult> SetOrder([FromBody] List<SetOrderDto> items)
+        {
+            return await _context.PlaceOrder(items, GetUserData());
+        }
+
         // PUT: api/ShoppingCartItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}", Name = "GetShoppingCartItemById")]
@@ -74,13 +82,6 @@ namespace Shopping.Controllers
         {
             return await _context.DeleteShoppingCartItem(id, GetUserData());
         }
-
-        /*
-        private bool ShoppingCartItemExists(int id)
-        {
-            return _context.ShoppingCartItem.Any(e => e.Id == id);
-        }
-        */
     }
 }
 

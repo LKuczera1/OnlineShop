@@ -100,19 +100,6 @@ var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-/*
-//Wymuszenie utworzenia resolvera
-//Facade wywołuje metodę z Resolvera, resolver jest tworzony.
-//Innymi słowy, builder tworzy wszystko "On Demand"
-app.Lifetime.ApplicationStarted.Register(() =>
-{
-    using var scope = app.Services.CreateScope();
-    _ = scope.ServiceProvider.GetRequiredService<CatalogResolver>();
-});
-*/
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

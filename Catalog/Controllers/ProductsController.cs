@@ -85,13 +85,6 @@ namespace Catalog.Controllers
             return await _context.DeleteProduct(id, GetUserData());
         }
 
-        /*
-        private bool ProductExists(int id)
-        {
-            return _context.Products.Any(e => e.Id == id);
-        }
-        */
-
         //------------- CRUD controllers for image path
 
         

@@ -31,6 +31,7 @@ namespace Shopping.Controllers
         }
 
         // GET: api/Orders
+
         [HttpGet]
         [Authorize(Roles = RolesStr.Admin_SalesDepartmentWorker_Customer)]
         public async Task<IEnumerable<OrderDto>> GetOrders()
@@ -101,13 +102,6 @@ namespace Shopping.Controllers
         {
             return await _shoppingFacade.GetOrderStatus(orderId, GetUserData());
         }
-
-        /*
-        private bool OrderExists(int id)
-        {
-            return _context.Orders.Any(e => e.Id == id);
-        }
-        */
     }
 }
 

@@ -19,6 +19,7 @@ namespace Shopping.Models
 
         public ShoppingCartItemDto ToDto() => new ShoppingCartItemDto
         {
+            Id = Id,
             ClientId = ClientId,
             ProductId = ProductId,
             Quantity = Quantity,

@@ -31,7 +31,7 @@ public static class ImageProcessing
 
         await using var input = file.OpenReadStream();
 
-        // Jawnie System.Drawing.Image (odporne na konflikt z System.Net.Mime.MediaTypeNames.Image)
+        //Jawnie System.Drawing.Image (odporne na konflikt z System.Net.Mime.MediaTypeNames.Image)
         using var source = System.Drawing.Image.FromStream(input, useEmbeddedColorManagement: true, validateImageData: true);
 
         int side = System.Math.Min(source.Width, source.Height);

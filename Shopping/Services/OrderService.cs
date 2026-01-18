@@ -123,8 +123,6 @@ namespace Shopping.Services
                 default: return new ForbidResult();
             }
 
-            //_context.Entry(entity).State = EntityState.Modified;
-
             await _context.SaveChangesAsync();
             return new NoContentResult();
         }
@@ -244,7 +242,6 @@ namespace Shopping.Services
 
             entity.FromDto(id, dto);
 
-            //_context.Entry(entity).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
             return new NoContentResult();
@@ -261,6 +258,7 @@ namespace Shopping.Services
                 case PriviledgeLevel.SalesDepartmentWorker:
                     _context.Set<Order>().Add(entity);
                     await _context.SaveChangesAsync();
+                    entity.OrderId = entity.Id;
                     break;
                 default: return new ForbidResult();
             }
