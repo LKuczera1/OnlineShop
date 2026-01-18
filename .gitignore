@@ -371,3 +371,4 @@ FodyWeavers.xsd
 /UnitTests/REST_API_Tests(EndToEnd)/RESTAPI_Tests.cs
 /UnitTests/REST_API_Tests(EndToEnd)/Shopping_Tests/Shopping_Tests.cs
 /UnitTests/REST_API_Tests(EndToEnd)/Tests_Base.cs
+/Catalog/productsImages
